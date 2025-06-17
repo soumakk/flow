@@ -1,8 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { PlusIcon } from 'lucide-react'
+import { status } from './db/schema'
+import { useDrizzleLiveQuery } from './db/useLiveQuery'
 import TableView from './modules/table/TableView'
 
 export default function App() {
+	const statusList = useDrizzleLiveQuery((db) => db.select().from(status).toSQL())
+	console.log(statusList)
+
 	return (
 		<div className="relative max-w-5xl mx-auto flex flex-col overflow-hidden">
 			<div className="flex justify-between items-center px-4 py-4">

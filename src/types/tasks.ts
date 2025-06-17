@@ -1,32 +1,37 @@
-export interface ITask {
-	id: string
+export interface ISpace {
+	id: number
+	name: string
 	created_at: string
+}
+
+export interface ITask {
+	id: number
 	title: string
 	description?: string | null
-	priority: string
 	due_date: string
-	status_id: string
+	status_id: number
 	tag_ids: string[]
-	updated_at: string
+	priority: string
 	sub_tasks: ISubTask[]
+	created_at: string
+	updated_at: string
 }
 
 export interface ISubTask {
-	id: string
+	id: number
 	title: string
 	completed: boolean
 }
 
 export interface IStatus {
-	id: string
+	id: number
 	name: string
 	color: string
 	created_at: string
-	updated_at: string
 }
 
 export interface ITag {
-	id: string
+	id: number
 	name: string
 	color: string
 	created_at: string
