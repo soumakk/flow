@@ -1,10 +1,14 @@
 import { defaultStatus, defaultTags, defaultTasks, PriorityOptions } from '@/lib/data'
 import DataTable from './DataTable'
 import { formatDate } from '@/lib/utils'
-import { Calendar1, Flag, Hourglass, Tag, Type } from 'lucide-react'
+import { Calendar1, Flag, Hourglass, Loader, Tag, Type } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
+import { useTasks } from '@/services/query'
 
 export default function TableView() {
+	const { data: tasks, isLoading: isTasksLoading } = useTasks()
+	console.log(tasks)
+
 	const columns: ColumnDef<any>[] = [
 		{
 			accessorKey: 'title',
@@ -96,5 +100,9 @@ export default function TableView() {
 		},
 	]
 
-	return <DataTable columns={columns} data={defaultTasks} />
+	if (isTasksLoading) {
+		return <Loader className="h-5 w-5 animate-spin" />
+	}
+
+	return <DataTable columns={columns} data={tasks} />
 }
