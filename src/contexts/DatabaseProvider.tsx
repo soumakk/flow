@@ -1,3 +1,4 @@
+import FlowLogo from '@/assets/flow-logo.svg'
 import { initDBQuery, initDummyDataQuery } from '@/lib/sql'
 import { PGlite } from '@electric-sql/pglite'
 import { PGliteProvider } from '@electric-sql/pglite-react'
@@ -38,7 +39,11 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
 	}, [])
 
 	if (!isInitialized) {
-		return <div>Initializing database...</div>
+		return (
+			<div className="h-screen w-full grid place-content-center">
+				<img src={FlowLogo} className="animate-pulse" alt="flow" />
+			</div>
+		)
 	}
 
 	return <PGliteProvider db={db}>{children}</PGliteProvider>

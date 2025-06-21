@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import flowLogo from '@/assets/flow.svg'
 import {
 	Sidebar,
 	SidebarContent,
@@ -12,11 +13,11 @@ import {
 	SidebarMenuItem,
 	SidebarRail,
 } from '@/components/ui/sidebar'
-import { GalleryVerticalEnd } from 'lucide-react'
+import { activeSpaceIdAtom } from '@/lib/atoms'
 import { useSpaces } from '@/services/query'
 import type { ISpace } from '@/types/tasks'
 import { useAtom } from 'jotai/react'
-import { activeSpaceIdAtom } from '@/lib/atoms'
+import { CircleDot, Palette, Tag } from 'lucide-react'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { data: spaces } = useSpaces()
@@ -24,25 +25,43 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
 	return (
 		<Sidebar {...props}>
-			<SidebarHeader>
+			<SidebarHeader className="p-6">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<SidebarMenuButton size="lg" asChild>
-							<a href="#">
-								<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-									<GalleryVerticalEnd className="size-4" />
-								</div>
-								<div className="flex flex-col gap-0.5 leading-none">
-									<span className="font-medium">Flow</span>
-									<span className="">v1.0.0</span>
-								</div>
-							</a>
-						</SidebarMenuButton>
+						<a href="#">
+							<img src={flowLogo} alt="Flow" />
+						</a>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
-			<SidebarContent>
-				<SidebarGroup>
+			<SidebarContent className="px-6">
+				<SidebarGroup className="p-0">
+					<SidebarGroupContent>
+						<SidebarMenu>
+							<SidebarMenuItem>
+								<SidebarMenuButton>
+									<Tag className="size-4" />
+									<span>Tags</span>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+							<SidebarMenuItem>
+								<SidebarMenuButton>
+									<CircleDot className="size-4" />
+									<span>Status</span>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+
+							<SidebarMenuItem>
+								<SidebarMenuButton>
+									<Palette className="size-4" />
+									<span>Appearance</span>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						</SidebarMenu>
+					</SidebarGroupContent>
+				</SidebarGroup>
+
+				<SidebarGroup className="p-0">
 					<SidebarGroupLabel>Spaces</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>

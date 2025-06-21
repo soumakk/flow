@@ -10,27 +10,23 @@ export default function App() {
 			<SidebarProvider
 				style={
 					{
-						'--sidebar-width': '19rem',
+						'--sidebar-width': '18rem',
 					} as React.CSSProperties
 				}
 			>
 				<AppSidebar />
 				<SidebarInset>
-					<header className="flex h-16 shrink-0 items-center gap-2 px-4">
-						<SidebarTrigger className="-ml-1" />
-					</header>
-					<div className="relative max-w-5xl mx-auto flex flex-col overflow-hidden">
-						<div className="flex justify-between items-center px-4 py-4">
-							<h1 className="font-semibold text-2xl">Tasks</h1>
-
-							<div className="flex gap-3 items-center">
-								<Button size="sm" className="rounded-full px-3 gap-1">
-									<PlusIcon className="h-3 w-3" />
-									<span>Add task</span>
-								</Button>
-							</div>
+					<header className="flex py-5 shrink-0 items-center justify-between gap-2 px-6">
+						<div className="flex items-center gap-3">
+							{/* <SidebarTrigger className="-ml-1" /> */}
+							<h1 className="font-semibold text-3xl">Tasks</h1>
 						</div>
-
+						<Button className="rounded-full">
+							<PlusIcon className="h-3 w-3" />
+							<span>Add task</span>
+						</Button>
+					</header>
+					<div className="flex-1 relative max-w-5xl px-4 mx-auto flex flex-col overflow-hidden">
 						<TableView />
 					</div>
 				</SidebarInset>
