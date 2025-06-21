@@ -15,9 +15,12 @@ import {
 import { GalleryVerticalEnd } from 'lucide-react'
 import { useSpaces } from '@/services/query'
 import type { ISpace } from '@/types/tasks'
+import { useAtom } from 'jotai/react'
+import { activeSpaceIdAtom } from '@/lib/atoms'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { data: spaces } = useSpaces()
+	const [activeSpaceId, setActiveSpaceId] = useAtom(activeSpaceIdAtom)
 
 	return (
 		<Sidebar {...props}>
@@ -45,7 +48,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						<SidebarMenu>
 							{spaces?.map((space: ISpace) => (
 								<SidebarMenuItem key={space.id}>
-									<SidebarMenuButton isActive={false}>
+									<SidebarMenuButton
+										isActive={activeSpaceId === space.id}
+										onClick={() => setActiveSpaceId(space.id)}
+									>
 										{space?.name}
 									</SidebarMenuButton>
 								</SidebarMenuItem>

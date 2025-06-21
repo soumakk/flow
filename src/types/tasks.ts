@@ -7,20 +7,41 @@ export interface ISpace {
 export interface ITask {
 	id: number
 	title: string
-	description?: string | null
+	description: string
 	due_date: string
-	status_id: number
-	tag_ids: string[]
 	priority: string
-	sub_tasks: ISubTask[]
 	created_at: string
 	updated_at: string
+	space_id: number
+	status_id: number
+	status: IStatus
+	tags: ITag[]
+	subtask_count: number
+	completed_subtasks: number
+}
+
+export interface ITaskDetails {
+	id: number
+	title: string
+	description: string
+	due_date: string
+	priority: string
+	created_at: string
+	updated_at: string
+	space_id: number
+	status_id: number
+	status: IStatus
+	tags: ITag[]
+	subtasks: ISubTask[]
+	subtask_count: number
+	completed_subtasks: number
 }
 
 export interface ISubTask {
 	id: number
 	title: string
 	completed: boolean
+	created_at: string
 }
 
 export interface IStatus {

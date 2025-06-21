@@ -1,24 +1,5 @@
 import { type IStatus, type ITag, type ITask, TaskPriority } from '@/types/tasks'
 
-export const PriorityOptions = [
-	{
-		label: 'Urgent',
-		value: TaskPriority.Urgent,
-	},
-	{
-		label: 'High',
-		value: TaskPriority.High,
-	},
-	{
-		label: 'Normal',
-		value: TaskPriority.Normal,
-	},
-	{
-		label: 'Low',
-		value: TaskPriority.Low,
-	},
-]
-
 export const defaultStatus: IStatus[] = [
 	{
 		id: 's-1',

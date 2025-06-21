@@ -1,15 +1,20 @@
-import { defaultStatus, defaultTags, defaultTasks, PriorityOptions } from '@/lib/data'
-import DataTable from './DataTable'
+import { activeSpaceIdAtom, PriorityOptions } from '@/lib/atoms'
 import { formatDate } from '@/lib/utils'
-import { Calendar1, Flag, Hourglass, Loader, Tag, Type } from 'lucide-react'
-import type { ColumnDef } from '@tanstack/react-table'
 import { useTasks } from '@/services/query'
+import type { ITask } from '@/types/tasks'
+import type { ColumnDef } from '@tanstack/react-table'
+import { useAtomValue } from 'jotai/react'
+import { Calendar1, Flag, Hourglass, Loader, Tag, Type } from 'lucide-react'
+import { useState } from 'react'
+import DataTable from './DataTable'
+import TaskDetailsDialog from '../task-details/TaskDetailsDialog'
 
 export default function TableView() {
-	const { data: tasks, isLoading: isTasksLoading } = useTasks()
-	console.log(tasks)
+	const activeSpaceId = useAtomValue(activeSpaceIdAtom)
+	const { data: tasks, isLoading: isTasksLoading } = useTasks({ spaceId: activeSpaceId })
+	const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
 
-	const columns: ColumnDef<any>[] = [
+	const columns: ColumnDef<ITask>[] = [
 		{
 			accessorKey: 'title',
 			header: () => (
@@ -41,10 +46,9 @@ export default function TableView() {
 		{
 			accessorKey: 'status_id',
 			header: 'Status',
-			cell: ({ getValue }) => {
-				const statusId = getValue() as string
-				const statusInfo = defaultStatus?.find((opt) => opt.id === statusId)
-				return <p className="whitespace-nowrap">{statusInfo?.name}</p>
+			cell: ({ getValue, row }) => {
+				const status = row.original?.status
+				return <p className="whitespace-nowrap">{status?.name}</p>
 			},
 		},
 		{
@@ -68,14 +72,10 @@ export default function TableView() {
 					<span>Tags</span>
 				</p>
 			),
-			cell: ({ getValue }) => {
-				const tagIds = getValue() as string[]
-				const selectedTags = defaultTags?.filter((tag) => tagIds?.includes(tag.id))
-
+			cell: ({ getValue, row }) => {
+				const tags = row.original?.tags
 				return (
-					<p className="whitespace-nowrap">
-						{selectedTags?.map((tag) => tag.name)?.join(', ')}
-					</p>
+					<p className="whitespace-nowrap">{tags?.map((tag) => tag.name)?.join(', ')}</p>
 				)
 			},
 		},
@@ -104,5 +104,21 @@ export default function TableView() {
 		return <Loader className="h-5 w-5 animate-spin" />
 	}
 
-	return <DataTable columns={columns} data={tasks} />
+	return (
+		<>
+			<DataTable
+				columns={columns}
+				data={tasks ?? []}
+				onRowClick={(task) => setSelectedTaskId(task.original.id)}
+			/>
+
+			{selectedTaskId ? (
+				<TaskDetailsDialog
+					open={!!selectedTaskId}
+					onClose={() => setSelectedTaskId(null)}
+					taskId={selectedTaskId}
+				/>
+			) : null}
+		</>
+	)
 }
