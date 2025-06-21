@@ -1,33 +1,32 @@
 import { cn } from '@/lib/utils'
-import type { ITask } from '@/types/tasks'
+import type { ITaskDetails } from '@/types/tasks'
 import { Circle, CircleCheck, PlusIcon, Trash2 } from 'lucide-react'
 import TextField from '../fields/TextField'
 import SubTaskProgress from './SubTaskProgress'
 
-export default function SubTasksList({ task }: { task: ITask }) {
+export default function SubTasksList({ task }: { task: ITaskDetails }) {
 	// async function updateCell(id: string, key: string, value: any) {
 	// 	await db.tasks.update(id, { ...task, [key]: value, updated_at: dayjs().toISOString() })
 	// }
 
-	async function handleSubtaskChange(taskId: string, subTaskId: string, key: string, value: any) {
-		const temp = task.sub_tasks.map((t) => {
-			if (t.id === subTaskId) {
-				return {
-					...t,
-					[key]: value,
-				}
-			} else return t
-		})
-
+	async function handleSubtaskChange(taskId: number, subTaskId: number, key: string, value: any) {
+		// const temp = task.sub_tasks.map((t) => {
+		// 	if (t.id === subTaskId) {
+		// 		return {
+		// 			...t,
+		// 			[key]: value,
+		// 		}
+		// 	} else return t
+		// })
 		// await updateCell(taskId, 'sub_tasks', temp)
 	}
 
-	async function handleAddNewSubtask(taskId: string) {
+	async function handleAddNewSubtask(taskId: number) {
 		// const temp = task.sub_tasks.concat([{ id: generateId(), title: '', completed: false }])
 		// await updateCell(taskId, 'sub_tasks', temp)
 	}
 
-	async function handleSubTaskDelete(taskId: string, subTaskId: string) {
+	async function handleSubTaskDelete(taskId: number, subTaskId: number) {
 		// const temp = task.sub_tasks.filter((st) => st.id !== subTaskId)
 		// await updateCell(taskId, 'sub_tasks', temp)
 	}
@@ -39,11 +38,11 @@ export default function SubTasksList({ task }: { task: ITask }) {
 					Sub Tasks
 				</label>
 
-				<SubTaskProgress subTasks={task.sub_tasks} />
+				<SubTaskProgress subTasks={task.subtasks} />
 			</div>
 
 			<ul>
-				{task.sub_tasks?.map((st) => (
+				{task.subtasks?.map((st) => (
 					<li
 						key={st.id}
 						className="flex items-center gap-2 py-2 border-b border-border text-sm group"

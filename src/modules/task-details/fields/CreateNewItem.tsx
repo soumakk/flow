@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { CommandItem } from '@/components/ui/command'
-import { StatusColors } from '@/lib/data'
+import { StatusColors } from '@/lib/atoms'
 import { shuffle } from 'radash'
 import { useState } from 'react'
 

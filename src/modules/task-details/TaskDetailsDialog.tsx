@@ -8,6 +8,7 @@ import StatusField from './fields/StatusField'
 import PriorityField from './fields/PriorityField'
 import TagsField from './fields/TagsField'
 import { Loader } from 'lucide-react'
+import SubTasksList from './sub-task/SubTasksList'
 
 export default function TaskDetailsDialog({
 	open,
@@ -108,9 +109,9 @@ export default function TaskDetailsDialog({
 									}}
 								/>
 							</div>
-
-							{/* <SubTasksList task={task} /> */}
 						</div>
+
+						<SubTasksList task={taskData} />
 
 						<div className="col-span-2 flex flex-col gap-3 sm:gap-6"></div>
 					</div>
