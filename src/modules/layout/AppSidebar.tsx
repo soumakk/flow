@@ -17,11 +17,13 @@ import { activeSpaceIdAtom } from '@/lib/atoms'
 import { useSpaces } from '@/services/query'
 import type { ISpace } from '@/types/tasks'
 import { useAtom } from 'jotai/react'
-import { CircleDot, Palette, Tag } from 'lucide-react'
+import { CircleDot, Palette, Plus, Tag } from 'lucide-react'
+import AddSpaceDialog from '../space/AddSpaceDialog'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { data: spaces } = useSpaces()
 	const [activeSpaceId, setActiveSpaceId] = useAtom(activeSpaceIdAtom)
+	const [isAddSpaceDialogOpen, setIsAddSpaceDialogOpen] = React.useState(false)
 
 	return (
 		<Sidebar {...props}>
@@ -62,7 +64,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</SidebarGroup>
 
 				<SidebarGroup className="p-0">
-					<SidebarGroupLabel>Spaces</SidebarGroupLabel>
+					<SidebarGroupLabel className="justify-between">
+						<span>Spaces</span>
+
+						<Plus
+							className="h-4 w-4 cursor-pointer"
+							onClick={() => setIsAddSpaceDialogOpen(true)}
+						/>
+					</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
 							{spaces?.map((space: ISpace) => (
@@ -80,6 +89,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarRail />
+
+			{isAddSpaceDialogOpen && (
+				<AddSpaceDialog
+					open={isAddSpaceDialogOpen}
+					onClose={() => setIsAddSpaceDialogOpen(false)}
+				/>
+			)}
 		</Sidebar>
 	)
 }

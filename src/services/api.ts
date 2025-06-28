@@ -9,6 +9,7 @@ import type {
 	IUpdateSubTaskBody,
 } from '@/types/tasks'
 import type { PGliteWithLive } from '@electric-sql/pglite/live'
+import { title } from 'process'
 
 export async function getAllTasksSQL(db: PGliteWithLive, params: { spaceId: number }) {
 	const data = await db.query(
@@ -214,4 +215,11 @@ export async function getTagsList(db: PGliteWithLive) {
 		ORDER BY created_at DESC
     `)
 	return data?.rows as ITag[]
+}
+
+export async function addSpace(db: PGliteWithLive, body: { name: string }) {
+	return await db.sql`
+      INSERT INTO space (name)
+      VALUES (${body.name})
+    `
 }

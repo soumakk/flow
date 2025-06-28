@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { addSubTask, deleteSubTask, updateSubTask, updateTaskDetails } from './api'
+import { addSpace, addSubTask, deleteSubTask, updateSubTask, updateTaskDetails } from './api'
 import type { IAddSubTaskBody, IUpdateSubTaskBody, IUpdateTaskBody } from '@/types/tasks'
 import { usePGlite } from '@electric-sql/pglite-react'
 
@@ -28,5 +28,12 @@ export function useDeleteSubTask() {
 	const db = usePGlite()
 	return useMutation({
 		mutationFn: (body: { subTaskId: number }) => deleteSubTask(db, body),
+	})
+}
+
+export function useAddSpace() {
+	const db = usePGlite()
+	return useMutation({
+		mutationFn: (body: { name: string }) => addSpace(db, body),
 	})
 }
