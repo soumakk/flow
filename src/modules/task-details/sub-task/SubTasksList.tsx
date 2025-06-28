@@ -1,34 +1,59 @@
 import { cn } from '@/lib/utils'
-import type { ITaskDetails } from '@/types/tasks'
+import { useAddSubTask, useDeleteSubTask, useUpdateSubTask } from '@/services/mutation'
+import type { ISubTask, ITaskDetails } from '@/types/tasks'
 import { Circle, CircleCheck, PlusIcon, Trash2 } from 'lucide-react'
 import TextField from '../fields/TextField'
 import SubTaskProgress from './SubTaskProgress'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function SubTasksList({ task }: { task: ITaskDetails }) {
-	// async function updateCell(id: string, key: string, value: any) {
-	// 	await db.tasks.update(id, { ...task, [key]: value, updated_at: dayjs().toISOString() })
-	// }
+	const { mutate: addSubTask } = useAddSubTask()
+	const { mutate: updateSubTask } = useUpdateSubTask()
+	const { mutate: deleteSubTask } = useDeleteSubTask()
+	const queryClient = useQueryClient()
 
-	async function handleSubtaskChange(taskId: number, subTaskId: number, key: string, value: any) {
-		// const temp = task.sub_tasks.map((t) => {
-		// 	if (t.id === subTaskId) {
-		// 		return {
-		// 			...t,
-		// 			[key]: value,
-		// 		}
-		// 	} else return t
-		// })
-		// await updateCell(taskId, 'sub_tasks', temp)
+	async function handleSubtaskChange(subTask: ISubTask, key: string, value: any) {
+		updateSubTask(
+			{
+				taskId: task.id,
+				subTaskId: subTask.id,
+				title: subTask.title,
+				completed: subTask.completed,
+				[key]: value,
+			},
+			{
+				onSuccess: () => {
+					console.log(key, value)
+
+					queryClient.invalidateQueries({ queryKey: ['task', task.id] })
+					queryClient.invalidateQueries({ queryKey: ['tasks', task.space_id] })
+				},
+			}
+		)
 	}
 
 	async function handleAddNewSubtask(taskId: number) {
-		// const temp = task.sub_tasks.concat([{ id: generateId(), title: '', completed: false }])
-		// await updateCell(taskId, 'sub_tasks', temp)
+		addSubTask(
+			{ title: 'Untitled', completed: false, taskId },
+			{
+				onSuccess: () => {
+					queryClient.invalidateQueries({ queryKey: ['task', taskId] })
+					queryClient.invalidateQueries({ queryKey: ['tasks', task.space_id] })
+				},
+			}
+		)
 	}
 
 	async function handleSubTaskDelete(taskId: number, subTaskId: number) {
-		// const temp = task.sub_tasks.filter((st) => st.id !== subTaskId)
-		// await updateCell(taskId, 'sub_tasks', temp)
+		deleteSubTask(
+			{ subTaskId },
+			{
+				onSuccess: () => {
+					queryClient.invalidateQueries({ queryKey: ['task', taskId] })
+					queryClient.invalidateQueries({ queryKey: ['tasks', task.space_id] })
+				},
+			}
+		)
 	}
 
 	return (
@@ -48,9 +73,9 @@ export default function SubTasksList({ task }: { task: ITaskDetails }) {
 						className="flex items-center gap-2 py-2 border-b border-border text-sm group"
 					>
 						<button
-							onClick={() =>
-								handleSubtaskChange(task.id, st.id, 'completed', !st.completed)
-							}
+							onClick={() => {
+								handleSubtaskChange(st, 'completed', !st.completed)
+							}}
 						>
 							{st.completed ? (
 								<CircleCheck className="h-4 w-4 text-muted-foreground" />
@@ -67,7 +92,7 @@ export default function SubTasksList({ task }: { task: ITaskDetails }) {
 							})}
 							placeholder="What's on your mind"
 							onSave={(value) => {
-								handleSubtaskChange(task?.id, st.id, 'title', value)
+								handleSubtaskChange(st, 'title', value)
 							}}
 						/>
 

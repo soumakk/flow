@@ -15,18 +15,19 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
 				const pgliteDb = await PGlite.create({
 					dataDir: 'idb://flow-db',
 					extensions: { live },
+					relaxedDurability: false,
 				})
 
-				await pgliteDb.exec(`
-					DROP TABLE IF EXISTS task_tag CASCADE;
-					DROP TABLE IF EXISTS sub_task CASCADE;
-					DROP TABLE IF EXISTS task CASCADE;
-					DROP TABLE IF EXISTS tag CASCADE;
-					DROP TABLE IF EXISTS status CASCADE;
-					DROP TABLE IF EXISTS space CASCADE;
-					`)
+				// await pgliteDb.exec(`
+				// 	DROP TABLE IF EXISTS task_tag CASCADE;
+				// 	DROP TABLE IF EXISTS sub_task CASCADE;
+				// 	DROP TABLE IF EXISTS task CASCADE;
+				// 	DROP TABLE IF EXISTS tag CASCADE;
+				// 	DROP TABLE IF EXISTS status CASCADE;
+				// 	DROP TABLE IF EXISTS space CASCADE;
+				// 	`)
 				await pgliteDb.exec(initDBQuery)
-				await pgliteDb.exec(initDummyDataQuery)
+				// await pgliteDb.exec(initDummyDataQuery)
 
 				setDb(pgliteDb)
 				setIsInitialized(true)

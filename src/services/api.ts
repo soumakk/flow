@@ -1,4 +1,13 @@
-import type { ISpace, IStatus, ITag, ITask, ITaskDetails } from '@/types/tasks'
+import type {
+	ISpace,
+	IStatus,
+	IAddSubTaskBody,
+	ITag,
+	ITask,
+	ITaskDetails,
+	IUpdateTaskBody,
+	IUpdateSubTaskBody,
+} from '@/types/tasks'
 import type { PGliteWithLive } from '@electric-sql/pglite/live'
 
 export async function getAllTasksSQL(db: PGliteWithLive, params: { spaceId: number }) {
@@ -121,6 +130,63 @@ export async function getTaskDetails(db: PGliteWithLive, params: { taskId: numbe
 		[params.taskId]
 	)
 	return data.rows[0] as ITaskDetails
+}
+
+export async function updateTaskDetails(db: PGliteWithLive, body: IUpdateTaskBody) {
+	console.log({ body })
+	return await db.transaction(async (tx) => {
+		// Update task fields
+		await tx.sql`
+        UPDATE task
+        SET
+          title = ${body.title},
+          description = ${body.description},
+          status_id = ${body.status_id},
+          priority = ${body.priority},
+          due_date = ${body.due_date},
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${body.taskId}
+      `
+
+		// Update tags (delete existing + insert new)
+		await tx.sql`
+        DELETE FROM task_tag
+        WHERE task_id = ${body.taskId}
+      `
+
+		if (body.tag_ids?.length) {
+			await tx.sql`
+          INSERT INTO task_tag (task_id, tag_id)
+          SELECT ${body.taskId}, unnest(${body.tag_ids}::int[])
+        `
+		}
+	})
+}
+
+export async function addSubTask(db: PGliteWithLive, body: IAddSubTaskBody) {
+	return await db.sql`
+      INSERT INTO sub_task (title, completed, task_id) 
+      VALUES (${body.title}, ${body.completed}, ${body.taskId})
+    `
+}
+
+export async function updateSubTask(db: PGliteWithLive, body: IUpdateSubTaskBody) {
+	console.log(body)
+	return await db.sql`
+      UPDATE sub_task 
+      SET 
+        title = ${body.title},
+        completed = ${body.completed},
+        task_id = ${body.taskId}
+      WHERE id = ${body.subTaskId}
+    `
+}
+
+export async function deleteSubTask(db: PGliteWithLive, body: { subTaskId: number }) {
+	return await db.sql`
+      DELETE FROM sub_task 
+      WHERE id = ${body.subTaskId}
+    `
 }
 
 export async function getSpaces(db: PGliteWithLive) {

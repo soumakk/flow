@@ -26,11 +26,11 @@ export default function TagsField({
 	const [search, setSearch] = useState('')
 	const [open, setOpen] = useState(false)
 
-	useEffect(() => {
-		if (initialTags) {
-			setSelectedTagsIds(initialTags)
-		}
-	}, [initialTags])
+	// useEffect(() => {
+	// 	if (initialTags) {
+	// 		setSelectedTagsIds(initialTags)
+	// 	}
+	// }, [initialTags])
 
 	const filteredList = tagsList?.filter((opt) =>
 		search ? opt.name?.toLowerCase().includes(search?.toLowerCase()) : true
@@ -45,18 +45,19 @@ export default function TagsField({
 		label?: string
 		color?: string
 	}) {
-		// if (tagId) {
-		// 	const temp = new Set(selectedTagIds)
-		// 	if (temp.has(tagId)) {
-		// 		temp.delete(tagId)
-		// 	} else {
-		// 		temp.add(tagId)
-		// 	}
-		// 	const tagIds = Array.from(temp)
-		// 	setSelectedTagsIds(tagIds)
-		// 	onSave(tagIds)
-		// 	// setOpen(false)
-		// } else if (label && !tagId) {
+		if (tagId) {
+			const temp = new Set(selectedTagIds)
+			if (temp.has(tagId)) {
+				temp.delete(tagId)
+			} else {
+				temp.add(tagId)
+			}
+			const tagIds = Array.from(temp)
+			setSelectedTagsIds(tagIds)
+			onSave(tagIds)
+			// setOpen(false)
+		}
+		// else if (label && !tagId) {
 		// const newId = generateId()
 		// const temp = new Set(selectedTagIds)
 		// await db.tags.add({

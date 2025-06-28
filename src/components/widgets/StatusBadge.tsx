@@ -2,7 +2,6 @@ import { Badge } from '@/components/ui/badge'
 import type { IStatus } from '@/types/tasks'
 
 export default function StatusBadge({ status }: { status: IStatus }) {
-	console.log(status)
 	return (
 		<Badge
 			className="text-black font-medium rounded-full gap-1 px-2"

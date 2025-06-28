@@ -9,6 +9,8 @@ import PriorityField from './fields/PriorityField'
 import TagsField from './fields/TagsField'
 import { Loader } from 'lucide-react'
 import SubTasksList from './sub-task/SubTasksList'
+import { useTaskUpdateMutation } from '@/services/mutation'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function TaskDetailsDialog({
 	open,
@@ -19,11 +21,34 @@ export default function TaskDetailsDialog({
 	onClose: () => void
 	taskId: number
 }) {
+	const queryClient = useQueryClient()
 	const { data: taskData, isLoading } = useTaskDetails({
 		taskId: taskId,
 	})
 	const { data: statusList, isLoading: isStatusLoading } = useStatusList()
 	const { data: tagsList, isLoading: isTagsLoading } = useTagsList()
+	const { mutate } = useTaskUpdateMutation()
+
+	function updateTask(key: string, value: any) {
+		mutate(
+			{
+				taskId,
+				title: taskData?.title,
+				description: taskData?.description,
+				status_id: taskData?.status_id,
+				due_date: taskData?.due_date,
+				priority: taskData?.priority,
+				tag_ids: taskData?.tags?.map((tag) => tag.id),
+				[key]: value,
+			},
+			{
+				onSuccess: () => {
+					queryClient.invalidateQueries({ queryKey: ['task', taskId] })
+					queryClient.invalidateQueries({ queryKey: ['tasks', taskData.space_id] })
+				},
+			}
+		)
+	}
 
 	return (
 		<Dialog open={open} onOpenChange={onClose}>
@@ -42,7 +67,7 @@ export default function TaskDetailsDialog({
 								placeholder="Untitled"
 								defaultValue={taskData?.title}
 								onSave={(value) => {
-									// updateCell(task?.id, 'title', value)
+									updateTask('title', value)
 								}}
 							/>
 						</div>
@@ -56,7 +81,7 @@ export default function TaskDetailsDialog({
 								<DateField
 									initialValue={taskData?.due_date}
 									onSave={(value) => {
-										// updateCell(task?.id, 'due_date', value)
+										updateTask('due_date', value)
 									}}
 								/>
 							</div>
@@ -67,7 +92,7 @@ export default function TaskDetailsDialog({
 								</label>
 								<StatusField
 									onSave={(value) => {
-										// updateCell(task?.id, 'status_id', value)
+										updateTask('status_id', value)
 									}}
 									initialValue={taskData?.status_id}
 									statusList={statusList}
@@ -80,7 +105,7 @@ export default function TaskDetailsDialog({
 								</label>
 								<PriorityField
 									onSave={(value) => {
-										// updateCell(task?.id, 'priority', value)
+										updateTask('priority', value)
 									}}
 									initialValue={taskData.priority}
 								/>
@@ -92,7 +117,7 @@ export default function TaskDetailsDialog({
 								</label>
 								<TagsField
 									onSave={(value) => {
-										// updateCell(task?.id, 'tag_ids', value)
+										updateTask('tag_ids', value)
 									}}
 									initialTags={taskData?.tags?.map((tag) => tag.id)}
 									tagsList={tagsList}
@@ -105,7 +130,7 @@ export default function TaskDetailsDialog({
 								<TextareaField
 									initialValue={taskData.description}
 									onSave={(value) => {
-										// updateCell(task?.id, 'description', value)
+										updateTask('description', value)
 									}}
 								/>
 							</div>

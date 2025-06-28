@@ -17,7 +17,7 @@ export default function StatusField({
 	initialValue,
 	statusList,
 }: {
-	onSave: (value: string) => void
+	onSave: (value: number) => void
 	initialValue: number
 	statusList: IStatus[]
 }) {
@@ -45,23 +45,23 @@ export default function StatusField({
 		label?: string
 		color?: string
 	}) {
-		// if (statusId) {
-		// 	setCurrentStatus(statusId)
-		// 	onSave(statusId)
-		// 	setOpen(false)
-		// } else if (label && !statusId) {
-		// const newId = generateId()
-		// await db.status.add({
-		// 	color: color,
-		// 	name: label,
-		// 	created_at: dayjs().toISOString(),
-		// 	updated_at: dayjs().toISOString(),
-		// 	id: newId,
-		// })
-		// await onSave(newId)
-		// setSearch('')
-		// setOpen(false)
-		// }
+		if (statusId) {
+			setCurrentStatus(statusId)
+			onSave(statusId)
+			setOpen(false)
+		} else if (label && !statusId) {
+			// const newId = generateId()
+			// await db.status.add({
+			// 	color: color,
+			// 	name: label,
+			// 	created_at: dayjs().toISOString(),
+			// 	updated_at: dayjs().toISOString(),
+			// 	id: newId,
+			// })
+			//  onSave(newId)
+			// setSearch('')
+			// setOpen(false)
+		}
 	}
 
 	return (
