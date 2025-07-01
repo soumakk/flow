@@ -19,11 +19,17 @@ import type { ISpace } from '@/types/tasks'
 import { useAtom } from 'jotai/react'
 import { CircleDot, Palette, Plus, Tag } from 'lucide-react'
 import AddSpaceDialog from '../space/AddSpaceDialog'
+import TagsDialog from './TagsDialog'
+import StatusDialog from './StatusDialog'
+import AppearanceDialog from './AppearanceDialog'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { data: spaces } = useSpaces()
 	const [activeSpaceId, setActiveSpaceId] = useAtom(activeSpaceIdAtom)
 	const [isAddSpaceDialogOpen, setIsAddSpaceDialogOpen] = React.useState(false)
+	const [isTagsDialogOpen, setIsTagsDialogOpen] = React.useState(false)
+	const [isStatusDialogOpen, setIsStatusDialogOpen] = React.useState(false)
+	const [isAppearanceDialogOpen, setIsAppearanceDialogOpen] = React.useState(false)
 
 	return (
 		<Sidebar {...props}>
@@ -41,20 +47,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SidebarMenuItem>
-								<SidebarMenuButton>
+								<SidebarMenuButton onClick={() => setIsTagsDialogOpen(true)}>
 									<Tag className="size-4" />
 									<span>Tags</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 							<SidebarMenuItem>
-								<SidebarMenuButton>
+								<SidebarMenuButton onClick={() => setIsStatusDialogOpen(true)}>
 									<CircleDot className="size-4" />
 									<span>Status</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 
 							<SidebarMenuItem>
-								<SidebarMenuButton>
+								<SidebarMenuButton onClick={() => setIsAppearanceDialogOpen(true)}>
 									<Palette className="size-4" />
 									<span>Appearance</span>
 								</SidebarMenuButton>
@@ -94,6 +100,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<AddSpaceDialog
 					open={isAddSpaceDialogOpen}
 					onClose={() => setIsAddSpaceDialogOpen(false)}
+				/>
+			)}
+
+			{isTagsDialogOpen && (
+				<TagsDialog open={isTagsDialogOpen} onClose={() => setIsTagsDialogOpen(false)} />
+			)}
+
+			{isStatusDialogOpen && (
+				<StatusDialog
+					open={isStatusDialogOpen}
+					onClose={() => setIsStatusDialogOpen(false)}
+				/>
+			)}
+
+			{isAppearanceDialogOpen && (
+				<AppearanceDialog
+					open={isAppearanceDialogOpen}
+					onClose={() => setIsAppearanceDialogOpen(false)}
 				/>
 			)}
 		</Sidebar>

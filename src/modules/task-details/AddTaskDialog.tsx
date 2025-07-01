@@ -1,58 +1,48 @@
+import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
-import { useStatusList, useTagsList, useTaskDetails } from '@/services/query'
-import { DialogTitle } from '@radix-ui/react-dialog'
-import TextField from './fields/TextField'
-import TextareaField from './fields/TextareaField'
-import DateField from './fields/DateField'
-import StatusField from './fields/StatusField'
-import PriorityField from './fields/PriorityField'
-import TagsField from './fields/TagsField'
-import { Loader } from 'lucide-react'
-import SubTasksList from './sub-task/SubTasksList'
-import { useUpdateTask } from '@/services/mutation'
-import { useQueryClient } from '@tanstack/react-query'
-import { useAtomValue } from 'jotai/react'
 import { activeSpaceIdAtom } from '@/lib/atoms'
+import { useAddTask } from '@/services/mutation'
+import { TaskPriority } from '@/types/tasks'
+import { DialogTitle } from '@radix-ui/react-dialog'
+import { useForm } from '@tanstack/react-form'
+import { useQueryClient } from '@tanstack/react-query'
+import dayjs from 'dayjs'
+import { useAtomValue } from 'jotai/react'
+import TextField from './fields/TextField'
 
-export default function TaskDetailsDialog({
-	open,
-	onClose,
-	taskId,
-}: {
-	open: boolean
-	onClose: () => void
-	taskId: number
-}) {
+export default function AddTaskDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
 	const queryClient = useQueryClient()
+	const { mutate } = useAddTask()
 	const activeSpaceId = useAtomValue(activeSpaceIdAtom)
 
-	const { data: taskData, isLoading } = useTaskDetails({
-		taskId: taskId,
-	})
-	const { data: statusList, isLoading: isStatusLoading } = useStatusList()
-	const { data: tagsList, isLoading: isTagsLoading } = useTagsList()
-	const { mutate } = useUpdateTask()
+	// const { data: statusList, isLoading: isStatusLoading } = useStatusList()
+	// const { data: tagsList, isLoading: isTagsLoading } = useTagsList()
 
-	function updateTask(key: string, value: any) {
-		mutate(
-			{
-				taskId,
-				title: taskData?.title,
-				description: taskData?.description,
-				status_id: taskData?.status_id,
-				due_date: taskData?.due_date,
-				priority: taskData?.priority,
-				tag_ids: taskData?.tags?.map((tag) => tag.id),
-				[key]: value,
-			},
-			{
-				onSuccess: () => {
-					queryClient.invalidateQueries({ queryKey: ['task', taskId] })
-					queryClient.invalidateQueries({ queryKey: ['tasks', activeSpaceId] })
+	const form = useForm({
+		defaultValues: {
+			title: '',
+			description: '',
+		},
+		onSubmit: ({ value }) => {
+			mutate(
+				{
+					title: value?.title,
+					description: value?.description,
+					status_id: 1,
+					due_date: dayjs().toISOString(),
+					priority: TaskPriority.Normal,
+					tag_ids: [],
+					space_id: activeSpaceId,
 				},
-			}
-		)
-	}
+				{
+					onSuccess: () => {
+						queryClient.invalidateQueries({ queryKey: ['tasks', activeSpaceId] })
+						onClose()
+					},
+				}
+			)
+		},
+	})
 
 	return (
 		<Dialog open={open} onOpenChange={onClose}>
@@ -61,22 +51,29 @@ export default function TaskDetailsDialog({
 					<DialogTitle></DialogTitle>
 				</DialogHeader>
 
-				{isLoading || isStatusLoading || isTagsLoading ? (
-					<Loader />
-				) : (
-					<div className="">
-						<div className="mb-3">
-							<TextField
-								className="text-xl font-medium w-full focus:outline-2 outline-input p-2 rounded-sm"
-								placeholder="Untitled"
-								defaultValue={taskData?.title}
-								onSave={(value) => {
-									updateTask('title', value)
-								}}
-							/>
-						</div>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault()
+						e.stopPropagation()
+						form.handleSubmit()
+					}}
+				>
+					<div className="mb-3">
+						<form.Field name="title">
+							{(field) => (
+								<TextField
+									className="text-xl font-medium w-full focus:outline-2 outline-input p-2 rounded-sm"
+									placeholder="Whats on your mind?"
+									defaultValue={field.state.value}
+									onSave={(value) => {
+										field.handleChange(value)
+									}}
+								/>
+							)}
+						</form.Field>
+					</div>
 
-						<div className="my-4 flex flex-col gap-3">
+					{/* <div className="my-4 flex flex-col gap-3">
 							<div className="grid grid-cols-3 items-center">
 								<label className="text-muted-foreground text-xs uppercase font-medium">
 									Due date
@@ -138,11 +135,12 @@ export default function TaskDetailsDialog({
 									}}
 								/>
 							</div>
-						</div>
+						</div> */}
 
-						<SubTasksList task={taskData} />
+					<div className="flex justify-end">
+						<Button type="submit">Save</Button>
 					</div>
-				)}
+				</form>
 			</DialogContent>
 		</Dialog>
 	)

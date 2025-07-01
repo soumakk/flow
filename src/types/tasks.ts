@@ -65,6 +65,16 @@ export enum TaskPriority {
 	Low = 'low',
 }
 
+export interface IAddTaskBody {
+	title: string
+	description: string
+	status_id: number
+	priority: string
+	due_date: string
+	tag_ids: number[]
+	space_id: number
+}
+
 export interface IUpdateTaskBody {
 	taskId: number
 	title: string

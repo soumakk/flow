@@ -1,15 +1,15 @@
 import type {
+	IAddSubTaskBody,
+	IAddTaskBody,
 	ISpace,
 	IStatus,
-	IAddSubTaskBody,
 	ITag,
 	ITask,
 	ITaskDetails,
-	IUpdateTaskBody,
 	IUpdateSubTaskBody,
+	IUpdateTaskBody,
 } from '@/types/tasks'
 import type { PGliteWithLive } from '@electric-sql/pglite/live'
-import { title } from 'process'
 
 export async function getAllTasksSQL(db: PGliteWithLive, params: { spaceId: number }) {
 	const data = await db.query(
@@ -133,8 +133,14 @@ export async function getTaskDetails(db: PGliteWithLive, params: { taskId: numbe
 	return data.rows[0] as ITaskDetails
 }
 
+export async function addNewTask(db: PGliteWithLive, body: IAddTaskBody) {
+	return await db.sql`
+       INSERT INTO task (title, description, status_id, priority, due_date, space_id) 
+        VALUES (${body.title}, ${body.description}, ${body.status_id}, ${body.priority}, ${body.due_date}, ${body.space_id})
+    `
+}
+
 export async function updateTaskDetails(db: PGliteWithLive, body: IUpdateTaskBody) {
-	console.log({ body })
 	return await db.transaction(async (tx) => {
 		// Update task fields
 		await tx.sql`
