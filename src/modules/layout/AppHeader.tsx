@@ -11,7 +11,7 @@ export default function AppHeader() {
 				{/* <SidebarTrigger className="-ml-1" /> */}
 				<h1 className="font-semibold text-3xl">Tasks</h1>
 			</div>
-			<Button className="rounded-full" onClick={() => setIsAddTaskDialogOpen(true)}>
+			<Button onClick={() => setIsAddTaskDialogOpen(true)}>
 				<PlusIcon className="h-3 w-3" />
 				<span>Add task</span>
 			</Button>

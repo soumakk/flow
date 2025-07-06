@@ -241,12 +241,78 @@ export async function getStatusList(db: PGliteWithLive) {
 	return data?.rows as IStatus[]
 }
 
+export async function addStatus(db: PGliteWithLive, body: { name: string; color: string }) {
+	return await db.sql`
+      INSERT INTO status (name, color)
+      VALUES (${body.name}, ${body.color})
+    `
+}
+
+export async function updateStatus(
+	db: PGliteWithLive,
+	body: { name: string; color: string; statusId: number }
+) {
+	return await db.sql`
+      UPDATE status 
+      SET 
+        name = ${body.name},
+        color = ${body.color}
+      WHERE id = ${body.statusId}
+    `
+}
+
+export async function deleteStatus(db: PGliteWithLive, body: { statusId: number }) {
+	return await db.sql`
+      DELETE FROM status  
+      WHERE id = ${body.statusId}
+    `
+}
+
 // Tags
-export async function getTagsList(db: PGliteWithLive) {
-	const data = await db.query(`
+export async function getTagsList(db: PGliteWithLive, body: { search?: string }) {
+	let query = ''
+	const params: any[] = []
+
+	if (body.search) {
+		query = `WHERE LOWER(name) LIKE LOWER($1)`
+		params.push(`%${body.search}%`)
+	}
+
+	const data = await db.query(
+		`
 		SELECT id, name, color, created_at 
 		FROM tag 
+    ${query}
 		ORDER BY created_at DESC
-    `)
+    `,
+		params
+	)
 	return data?.rows as ITag[]
+}
+
+export async function addTag(db: PGliteWithLive, body: { name: string; color: string }) {
+	return await db.sql`
+      INSERT INTO tag (name, color)
+      VALUES (${body.name}, ${body.color})
+    `
+}
+
+export async function updateTag(
+	db: PGliteWithLive,
+	body: { name: string; color: string; tagId: number }
+) {
+	return await db.sql`
+      UPDATE tag 
+      SET 
+        name = ${body.name},
+        color = ${body.color}
+      WHERE id = ${body.tagId}
+    `
+}
+
+export async function deleteTag(db: PGliteWithLive, body: { tagId: number }) {
+	return await db.sql`
+      DELETE FROM tag 
+      WHERE id = ${body.tagId}
+    `
 }

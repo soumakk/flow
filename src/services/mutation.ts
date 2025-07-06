@@ -9,11 +9,17 @@ import { useMutation } from '@tanstack/react-query'
 import {
 	addNewTask,
 	addSpace,
+	addStatus,
 	addSubTask,
+	addTag,
 	deleteSpace,
+	deleteStatus,
 	deleteSubTask,
+	deleteTag,
 	updateSpace,
+	updateStatus,
 	updateSubTask,
+	updateTag,
 	updateTaskDetails,
 } from './api'
 
@@ -73,5 +79,50 @@ export function useDeleteSpace() {
 	const db = usePGlite()
 	return useMutation({
 		mutationFn: (body: { spaceId: number }) => deleteSpace(db, body),
+	})
+}
+
+// Tags
+export function useAddTag() {
+	const db = usePGlite()
+	return useMutation({
+		mutationFn: (body: { name: string; color: string }) => addTag(db, body),
+	})
+}
+
+export function useUpdateTag() {
+	const db = usePGlite()
+	return useMutation({
+		mutationFn: (body: { name: string; color: string; tagId: number }) => updateTag(db, body),
+	})
+}
+
+export function useDeleteTag() {
+	const db = usePGlite()
+	return useMutation({
+		mutationFn: (body: { tagId: number }) => deleteTag(db, body),
+	})
+}
+
+// Status
+export function useAddStatus() {
+	const db = usePGlite()
+	return useMutation({
+		mutationFn: (body: { name: string; color: string }) => addStatus(db, body),
+	})
+}
+
+export function useUpdateStatus() {
+	const db = usePGlite()
+	return useMutation({
+		mutationFn: (body: { name: string; color: string; statusId: number }) =>
+			updateStatus(db, body),
+	})
+}
+
+export function useDeleteStatus() {
+	const db = usePGlite()
+	return useMutation({
+		mutationFn: (body: { statusId: number }) => deleteStatus(db, body),
 	})
 }

@@ -20,7 +20,7 @@ import NewSpaceInput from '../space/NewSpaceInput'
 import SpaceListItem from '../space/SpaceListItem'
 import AppearanceDialog from './AppearanceDialog'
 import StatusDialog from './StatusDialog'
-import TagsDialog from './TagsDialog'
+import TagsDialog from '../tags/TagsDialog'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { data: spaces } = useSpaces()

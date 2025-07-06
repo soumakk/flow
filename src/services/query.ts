@@ -37,10 +37,10 @@ export function useStatusList() {
 	})
 }
 
-export function useTagsList() {
+export function useTagsList(params: { search?: string }) {
 	const db = usePGlite()
 	return useQuery({
-		queryKey: ['tags'],
-		queryFn: () => getTagsList(db),
+		queryKey: ['tags', params],
+		queryFn: () => getTagsList(db, params),
 	})
 }
