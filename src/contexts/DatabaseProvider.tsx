@@ -18,9 +18,9 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
 					relaxedDurability: false,
 				})
 
-				await pgliteDb.exec(resetDBQuery)
+				// await pgliteDb.exec(resetDBQuery)
 				await pgliteDb.exec(initDBQuery)
-				await pgliteDb.exec(initDummyDataQuery)
+				// await pgliteDb.exec(initDummyDataQuery)
 
 				setDb(pgliteDb)
 				setIsInitialized(true)
