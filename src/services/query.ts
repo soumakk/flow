@@ -29,15 +29,15 @@ export function useTaskDetails({ taskId }: { taskId: number }) {
 	})
 }
 
-export function useStatusList() {
+export function useStatusList(params?: { search?: string }) {
 	const db = usePGlite()
 	return useQuery({
-		queryKey: ['status'],
-		queryFn: () => getStatusList(db),
+		queryKey: ['status', params],
+		queryFn: () => getStatusList(db, params),
 	})
 }
 
-export function useTagsList(params: { search?: string }) {
+export function useTagsList(params?: { search?: string }) {
 	const db = usePGlite()
 	return useQuery({
 		queryKey: ['tags', params],

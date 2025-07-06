@@ -232,12 +232,24 @@ export async function deleteSpace(db: PGliteWithLive, body: { spaceId: number })
 }
 
 // Status
-export async function getStatusList(db: PGliteWithLive) {
-	const data = await db.query(`
+export async function getStatusList(db: PGliteWithLive, body: { search?: string }) {
+	let query = ''
+	const params: string[] = []
+
+	if (body?.search) {
+		query = `WHERE LOWER(name) LIKE LOWER($1)`
+		params.push(`%${body.search}%`)
+	}
+
+	const data = await db.query(
+		`
 		SELECT id, name, color, created_at 
 		FROM status 
+    ${query}
 		ORDER BY created_at DESC
-    `)
+    `,
+		params
+	)
 	return data?.rows as IStatus[]
 }
 
@@ -271,9 +283,9 @@ export async function deleteStatus(db: PGliteWithLive, body: { statusId: number 
 // Tags
 export async function getTagsList(db: PGliteWithLive, body: { search?: string }) {
 	let query = ''
-	const params: any[] = []
+	const params: string[] = []
 
-	if (body.search) {
+	if (body?.search) {
 		query = `WHERE LOWER(name) LIKE LOWER($1)`
 		params.push(`%${body.search}%`)
 	}

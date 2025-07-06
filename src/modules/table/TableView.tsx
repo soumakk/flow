@@ -4,13 +4,14 @@ import { useTasks } from '@/services/query'
 import type { ITask, TaskPriority } from '@/types/tasks'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useAtomValue } from 'jotai/react'
-import { Calendar1, CircleDot, Flag, Hourglass, Loader, Tag, Type } from 'lucide-react'
+import { Calendar1, CircleDot, Flag, Hourglass, Tag, Type } from 'lucide-react'
 import { useState } from 'react'
 import DataTable from './DataTable'
 import TaskDetailsDialog from '../task-details/TaskDetailsDialog'
 import PriorityFlag from '@/components/widgets/PriorityFlag'
 import StatusBadge from '@/components/widgets/StatusBadge'
 import TagBadge from '@/components/widgets/TagBadge'
+import Loader from '@/components/widgets/Loader'
 
 export default function TableView() {
 	const activeSpaceId = useAtomValue(activeSpaceIdAtom)
@@ -118,11 +119,7 @@ export default function TableView() {
 	]
 
 	if (isTasksLoading) {
-		return (
-			<div className="grid place-content-center h-full">
-				<Loader className="h-5 w-5 animate-spin" />
-			</div>
-		)
+		return <Loader />
 	}
 
 	return (
