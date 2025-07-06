@@ -14,7 +14,7 @@ export default function DateField({
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<button className="h-8 px-2 w-full gap-2 text-xs rounded-sm flex items-center cursor-pointer data-[state=open]:outline-2 outline-input">
+				<button className="h-8 px-2 w-full gap-2 text-xs rounded-sm flex items-center cursor-pointer data-[state=open]:outline-2 focus-visible:outline-2 outline-primary">
 					<Calendar1 className="h-4 w-4 text-muted-foreground" />
 					{initialValue ? (
 						<p className="whitespace-nowrap">{formatDate(initialValue)}</p>
@@ -26,8 +26,10 @@ export default function DateField({
 			<PopoverContent className="w-auto p-0">
 				<Calendar
 					mode="single"
-					selected={dayjs(initialValue ?? new Date()).toDate()}
-					onSelect={(date) => onSave(dayjs(date).toISOString())}
+					selected={dayjs(initialValue).toDate()}
+					onSelect={(date) => {
+						onSave(dayjs(date).format('YYYY-MM-DD'))
+					}}
 					autoFocus
 				/>
 			</PopoverContent>

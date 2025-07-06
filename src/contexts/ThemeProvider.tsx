@@ -39,7 +39,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 		root.classList.add(theme)
 
 		root.style.setProperty('--primary', color)
-		root.style.setProperty('--sidebar-accent', `${color}33`)
+		root.style.setProperty('--sidebar-accent', `${color}1A`)
 	}, [theme, color])
 
 	const value = {

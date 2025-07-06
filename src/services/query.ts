@@ -1,6 +1,15 @@
 import { usePGlite } from '@electric-sql/pglite-react'
 import { useQuery } from '@tanstack/react-query'
 import { getAllTasksSQL, getSpaces, getStatusList, getTagsList, getTaskDetails } from './api'
+import {
+	searchQueryAtom,
+	statusFilterAtom,
+	tagsFilterAtom,
+	priorityFilterAtom,
+	dueDateFilterAtom,
+	activeSpaceIdAtom,
+} from '@/lib/atoms'
+import { useAtomValue } from 'jotai/react'
 
 export function useSpaces() {
 	const db = usePGlite()
@@ -10,12 +19,26 @@ export function useSpaces() {
 	})
 }
 
-export function useTasks({ spaceId }: { spaceId: number }) {
+export function useTasks() {
+	const activeSpaceId = useAtomValue(activeSpaceIdAtom)
+	const searchQuery = useAtomValue(searchQueryAtom)
+	const statusFilter = useAtomValue(statusFilterAtom)
+	const tagsFilter = useAtomValue(tagsFilterAtom)
+	const priorityFilter = useAtomValue(priorityFilterAtom)
+	const dueDateFilter = useAtomValue(dueDateFilterAtom)
+
 	const db = usePGlite()
+
+	const body = {
+		spaceId: activeSpaceId,
+		statusIds: statusFilter,
+		// priorities: priorityFilter,
+	}
+
 	return useQuery({
-		queryKey: ['tasks', spaceId],
-		queryFn: () => getAllTasksSQL(db, { spaceId }),
-		enabled: !!spaceId,
+		queryKey: ['tasks', body],
+		queryFn: () => getAllTasksSQL(db, body),
+		enabled: !!body?.spaceId,
 	})
 }
 

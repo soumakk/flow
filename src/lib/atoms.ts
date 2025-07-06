@@ -1,5 +1,6 @@
 import { TaskPriority } from '@/types/tasks'
 import { atomWithStorage } from 'jotai/utils'
+import { atom } from 'jotai/vanilla'
 
 export enum Theme {
 	light = 'light',
@@ -13,22 +14,32 @@ export const activeSpaceIdAtom = atomWithStorage<number | null>('space', null)
 export const themeAtom = atomWithStorage<Theme>('theme', Theme.light)
 export const primaryColorAtom = atomWithStorage('color', defaultPrimaryColor)
 
+export const searchQueryAtom = atom('')
+export const statusFilterAtom = atom<number[]>([])
+export const tagsFilterAtom = atom<number[]>([])
+export const priorityFilterAtom = atom<string[]>([])
+export const dueDateFilterAtom = atom<string>()
+
 export const PriorityOptions = [
 	{
 		label: 'Urgent',
 		value: TaskPriority.Urgent,
+		color: '#fb2c36',
 	},
 	{
 		label: 'High',
 		value: TaskPriority.High,
+		color: '#eab308',
 	},
 	{
 		label: 'Normal',
 		value: TaskPriority.Normal,
+		color: '#3b82f6',
 	},
 	{
 		label: 'Low',
 		value: TaskPriority.Low,
+		color: '#6a7282 ',
 	},
 ]
 

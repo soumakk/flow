@@ -1,21 +1,19 @@
-import { activeSpaceIdAtom, PriorityOptions } from '@/lib/atoms'
+import Loader from '@/components/widgets/Loader'
+import PriorityFlag from '@/components/widgets/PriorityFlag'
+import StatusBadge from '@/components/widgets/StatusBadge'
+import TagBadge from '@/components/widgets/TagBadge'
+import { PriorityOptions } from '@/lib/atoms'
 import { formatDate } from '@/lib/utils'
 import { useTasks } from '@/services/query'
 import type { ITask, TaskPriority } from '@/types/tasks'
 import type { ColumnDef } from '@tanstack/react-table'
-import { useAtomValue } from 'jotai/react'
 import { Calendar1, CircleDot, Flag, Hourglass, Tag, Type } from 'lucide-react'
 import { useState } from 'react'
 import DataTable from './DataTable'
 import TaskDetailsDialog from '../task-details/TaskDetailsDialog'
-import PriorityFlag from '@/components/widgets/PriorityFlag'
-import StatusBadge from '@/components/widgets/StatusBadge'
-import TagBadge from '@/components/widgets/TagBadge'
-import Loader from '@/components/widgets/Loader'
 
 export default function TableView() {
-	const activeSpaceId = useAtomValue(activeSpaceIdAtom)
-	const { data: tasks, isLoading: isTasksLoading } = useTasks({ spaceId: activeSpaceId })
+	const { data: tasks, isLoading: isTasksLoading, refetch } = useTasks()
 	const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
 
 	const columns: ColumnDef<ITask>[] = [
@@ -135,6 +133,7 @@ export default function TableView() {
 					open={!!selectedTaskId}
 					onClose={() => setSelectedTaskId(null)}
 					taskId={selectedTaskId}
+					refetchTasks={refetch}
 				/>
 			) : null}
 		</>

@@ -1,32 +1,33 @@
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
+import Loader from '@/components/widgets/Loader'
+import StatusBadge from '@/components/widgets/StatusBadge'
+import { useUpdateTask } from '@/services/mutation'
 import { useStatusList, useTagsList, useTaskDetails } from '@/services/query'
 import { DialogTitle } from '@radix-ui/react-dialog'
+import DateField from './fields/DateField'
+import PriorityField from './fields/PriorityField'
+import StatusField from './fields/StatusField'
+import TagsField from './fields/TagsField'
 import TextField from './fields/TextField'
 import TextareaField from './fields/TextareaField'
-import DateField from './fields/DateField'
-import StatusField from './fields/StatusField'
-import PriorityField from './fields/PriorityField'
-import TagsField from './fields/TagsField'
 import SubTasksList from './sub-task/SubTasksList'
-import { useUpdateTask } from '@/services/mutation'
-import { useQueryClient } from '@tanstack/react-query'
-import { useAtomValue } from 'jotai/react'
-import { activeSpaceIdAtom } from '@/lib/atoms'
-import Loader from '@/components/widgets/Loader'
 
 export default function TaskDetailsDialog({
 	open,
 	onClose,
 	taskId,
+	refetchTasks,
 }: {
 	open: boolean
 	onClose: () => void
 	taskId: number
+	refetchTasks: () => void
 }) {
-	const queryClient = useQueryClient()
-	const activeSpaceId = useAtomValue(activeSpaceIdAtom)
-
-	const { data: taskData, isLoading } = useTaskDetails({
+	const {
+		data: taskData,
+		isLoading,
+		refetch,
+	} = useTaskDetails({
 		taskId: taskId,
 	})
 	const { data: statusList, isLoading: isStatusLoading } = useStatusList()
@@ -47,8 +48,8 @@ export default function TaskDetailsDialog({
 			},
 			{
 				onSuccess: () => {
-					queryClient.invalidateQueries({ queryKey: ['task', taskId] })
-					queryClient.invalidateQueries({ queryKey: ['tasks', activeSpaceId] })
+					refetch()
+					refetchTasks?.()
 				},
 			}
 		)
@@ -100,6 +101,9 @@ export default function TaskDetailsDialog({
 									}}
 									initialValue={taskData?.status_id}
 									statusList={statusList}
+									render={(statusInfo) =>
+										statusInfo ? <StatusBadge status={statusInfo} /> : null
+									}
 								/>
 							</div>
 

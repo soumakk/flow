@@ -12,9 +12,25 @@ import type {
 import type { PGliteWithLive } from '@electric-sql/pglite/live'
 
 // Tasks
-export async function getAllTasksSQL(db: PGliteWithLive, params: { spaceId: number }) {
-	const data = await db.query(
-		` 
+export async function getAllTasksSQL(
+	db: PGliteWithLive,
+	body: { spaceId: number; statusIds?: number[]; priorities?: string[] }
+) {
+	try {
+		let query = 'WHERE t.space_id = $1 '
+		const params: any[] = [body.spaceId]
+
+		if (body?.statusIds?.length) {
+			query += `AND status_id IN (${body.statusIds?.join(', ')})`
+		}
+
+		// if (body?.priorities?.length) {
+		// 	query += `OR priority IN (${body.priorities?.join(', ')})`
+		// }
+		// console.log(body, query)
+
+		const data = await db.query(
+			` 
       SELECT 
         t.id,
         t.title,
@@ -57,13 +73,18 @@ export async function getAllTasksSQL(db: PGliteWithLive, params: { spaceId: numb
         LEFT JOIN tag ON tt.tag_id = tag.id
         LEFT JOIN sub_task sub ON t.id = sub.task_id
     
-        WHERE t.space_id = $1
+        ${query}
+
         GROUP BY t.id, s.id, s.name, st.id, st.name, st.color
         ORDER BY t.created_at DESC
       `,
-		[params.spaceId]
-	)
-	return data.rows as ITask[]
+			params
+		)
+		return data.rows as ITask[]
+	} catch (error) {
+		console.log(error)
+		return null
+	}
 }
 
 export async function getTaskDetails(db: PGliteWithLive, params: { taskId: number }) {
@@ -254,10 +275,12 @@ export async function getStatusList(db: PGliteWithLive, body: { search?: string 
 }
 
 export async function addStatus(db: PGliteWithLive, body: { name: string; color: string }) {
-	return await db.sql`
+	const data = await db.sql`
       INSERT INTO status (name, color)
       VALUES (${body.name}, ${body.color})
+      RETURNING id
     `
+	return data?.rows?.[0] as { id: number }
 }
 
 export async function updateStatus(

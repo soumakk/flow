@@ -2,41 +2,45 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
 import { activeSpaceIdAtom } from '@/lib/atoms'
 import { useAddTask } from '@/services/mutation'
+import { useStatusList, useTasks } from '@/services/query'
 import { TaskPriority } from '@/types/tasks'
 import { DialogTitle } from '@radix-ui/react-dialog'
 import { useForm } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useAtomValue } from 'jotai/react'
+import { CornerDownLeft, Disc } from 'lucide-react'
+import PriorityField from './fields/PriorityField'
+import StatusField from './fields/StatusField'
 import TextField from './fields/TextField'
 
 export default function AddTaskDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-	const queryClient = useQueryClient()
 	const { mutate } = useAddTask()
 	const activeSpaceId = useAtomValue(activeSpaceIdAtom)
 
-	// const { data: statusList, isLoading: isStatusLoading } = useStatusList()
-	// const { data: tagsList, isLoading: isTagsLoading } = useTagsList()
+	const { refetch } = useTasks()
+	const { data: statusList, isLoading: isStatusLoading } = useStatusList()
 
 	const form = useForm({
 		defaultValues: {
 			title: '',
 			description: '',
+			status_id: 1,
+			priority: TaskPriority.Normal,
 		},
 		onSubmit: ({ value }) => {
 			mutate(
 				{
 					title: value?.title,
 					description: value?.description,
-					status_id: 1,
+					status_id: value?.status_id,
 					due_date: dayjs().toISOString(),
-					priority: TaskPriority.Normal,
+					priority: value?.priority,
 					tag_ids: [],
 					space_id: activeSpaceId,
 				},
 				{
 					onSuccess: () => {
-						queryClient.invalidateQueries({ queryKey: ['tasks', activeSpaceId] })
+						refetch()
 						onClose()
 					},
 				}
@@ -62,7 +66,7 @@ export default function AddTaskDialog({ open, onClose }: { open: boolean; onClos
 						<form.Field name="title">
 							{(field) => (
 								<TextField
-									className="text-xl font-medium w-full focus:outline-2 outline-input p-2 rounded-sm"
+									className="text-xl font-medium w-full focus:outline-0 p-2 rounded-sm"
 									placeholder="Whats on your mind?"
 									defaultValue={field.state.value}
 									onSave={(value) => {
@@ -73,72 +77,49 @@ export default function AddTaskDialog({ open, onClose }: { open: boolean; onClos
 						</form.Field>
 					</div>
 
-					{/* <div className="my-4 flex flex-col gap-3">
-							<div className="grid grid-cols-3 items-center">
-								<label className="text-muted-foreground text-xs uppercase font-medium">
-									Due date
-								</label>
+					<div className="flex justify-between">
+						<div className="flex items-center gap-3">
+							<form.Field name="status_id">
+								{(field) => (
+									<StatusField
+										onSave={(value) => {
+											field.handleChange(value)
+										}}
+										initialValue={field.state.value}
+										statusList={statusList}
+										className="border text-sm px-2 h-8"
+										render={(statusInfo) => (
+											<>
+												<Disc
+													className="h-4 w-4"
+													style={{ color: statusInfo?.color }}
+												/>
+												<span className="whitespace-nowrap">
+													{statusInfo?.name ?? 'Status'}
+												</span>
+											</>
+										)}
+									/>
+								)}
+							</form.Field>
 
-								<DateField
-									initialValue={taskData?.due_date}
-									onSave={(value) => {
-										updateTask('due_date', value)
-									}}
-								/>
-							</div>
-
-							<div className="grid grid-cols-3 items-center">
-								<label className="text-muted-foreground text-xs uppercase font-medium">
-									Status
-								</label>
-								<StatusField
-									onSave={(value) => {
-										updateTask('status_id', value)
-									}}
-									initialValue={taskData?.status_id}
-									statusList={statusList}
-								/>
-							</div>
-
-							<div className="grid grid-cols-3 items-center">
-								<label className="text-muted-foreground text-xs uppercase font-medium">
-									Priority
-								</label>
-								<PriorityField
-									onSave={(value) => {
-										updateTask('priority', value)
-									}}
-									initialValue={taskData.priority}
-								/>
-							</div>
-
-							<div className="grid grid-cols-3 items-center">
-								<label className="text-muted-foreground text-xs uppercase font-medium">
-									Tags
-								</label>
-								<TagsField
-									onSave={(value) => {
-										updateTask('tag_ids', value)
-									}}
-									initialTags={taskData?.tags?.map((tag) => tag.id)}
-									tagsList={tagsList}
-								/>
-							</div>
+							<form.Field name="priority">
+								{(field) => (
+									<PriorityField
+										onSave={(value) => {
+											field.handleChange(value)
+										}}
+										initialValue={field.state.value}
+										className="border text-sm"
+									/>
+								)}
+							</form.Field>
 						</div>
 
-						<div className="col-span-3">
-							<div>
-								<TextareaField
-									initialValue={taskData.description}
-									onSave={(value) => {
-										updateTask('description', value)
-									}}
-								/>
-							</div>
-						</div> */}
-
-					<div className="flex justify-end">
-						<Button type="submit">Save</Button>
+						<Button type="submit">
+							Save
+							<CornerDownLeft />
+						</Button>
 					</div>
 				</form>
 			</DialogContent>
