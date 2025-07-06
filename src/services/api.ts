@@ -11,6 +11,7 @@ import type {
 } from '@/types/tasks'
 import type { PGliteWithLive } from '@electric-sql/pglite/live'
 
+// Tasks
 export async function getAllTasksSQL(db: PGliteWithLive, params: { spaceId: number }) {
 	const data = await db.query(
 		` 
@@ -170,6 +171,7 @@ export async function updateTaskDetails(db: PGliteWithLive, body: IUpdateTaskBod
 	})
 }
 
+// Sub task
 export async function addSubTask(db: PGliteWithLive, body: IAddSubTaskBody) {
 	return await db.sql`
       INSERT INTO sub_task (title, completed, task_id) 
@@ -196,6 +198,7 @@ export async function deleteSubTask(db: PGliteWithLive, body: { subTaskId: numbe
     `
 }
 
+// Spaces
 export async function getSpaces(db: PGliteWithLive) {
 	const data = await db.query(`
 		SELECT id, name, created_at 
@@ -205,6 +208,30 @@ export async function getSpaces(db: PGliteWithLive) {
 	return data?.rows as ISpace[]
 }
 
+export async function addSpace(db: PGliteWithLive, body: { name: string }) {
+	return await db.sql`
+      INSERT INTO space (name)
+      VALUES (${body.name})
+    `
+}
+
+export async function updateSpace(db: PGliteWithLive, body: { name: string; spaceId: number }) {
+	return await db.sql`
+      UPDATE space 
+      SET 
+        name = ${body.name}
+      WHERE id = ${body.spaceId}
+    `
+}
+
+export async function deleteSpace(db: PGliteWithLive, body: { spaceId: number }) {
+	return await db.sql`
+      DELETE FROM space 
+      WHERE id = ${body.spaceId}
+    `
+}
+
+// Status
 export async function getStatusList(db: PGliteWithLive) {
 	const data = await db.query(`
 		SELECT id, name, color, created_at 
@@ -214,6 +241,7 @@ export async function getStatusList(db: PGliteWithLive) {
 	return data?.rows as IStatus[]
 }
 
+// Tags
 export async function getTagsList(db: PGliteWithLive) {
 	const data = await db.query(`
 		SELECT id, name, color, created_at 
@@ -221,11 +249,4 @@ export async function getTagsList(db: PGliteWithLive) {
 		ORDER BY created_at DESC
     `)
 	return data?.rows as ITag[]
-}
-
-export async function addSpace(db: PGliteWithLive, body: { name: string }) {
-	return await db.sql`
-      INSERT INTO space (name)
-      VALUES (${body.name})
-    `
 }
