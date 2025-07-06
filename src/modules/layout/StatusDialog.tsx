@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import Spinner from '@/components/widgets/Spinner'
+import Loader from '@/components/widgets/Loader'
 import { useStatusList } from '@/services/query'
 
 export default function StatusDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -13,7 +13,7 @@ export default function StatusDialog({ open, onClose }: { open: boolean; onClose
 				</DialogHeader>
 
 				{isStatusLoading ? (
-					<Spinner />
+					<Loader />
 				) : (
 					<>
 						<Input

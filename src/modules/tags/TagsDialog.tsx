@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import Spinner from '@/components/widgets/Spinner'
+import Loader from '@/components/widgets/Loader'
 import { useDeleteTag } from '@/services/mutation'
 import { useTagsList } from '@/services/query'
 import { useQueryClient } from '@tanstack/react-query'
@@ -48,7 +48,7 @@ export default function TagsDialog({ open, onClose }: { open: boolean; onClose: 
 
 				<div className="min-h-[300px]">
 					{isTagsLoading ? (
-						<Spinner />
+						<Loader />
 					) : (
 						<div className="flex flex-col gap-3">
 							{tagsList?.map((tag) => (

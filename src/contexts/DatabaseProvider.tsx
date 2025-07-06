@@ -1,5 +1,5 @@
-import FlowLogo from '@/assets/flow-logo.svg'
-import { initDBQuery, initDummyDataQuery } from '@/lib/sql'
+import FlowIcon from '@/assets/icons/FlowIcon'
+import { initDBQuery } from '@/lib/sql'
 import { PGlite } from '@electric-sql/pglite'
 import { PGliteProvider } from '@electric-sql/pglite-react'
 import { live, type PGliteWithLive } from '@electric-sql/pglite/live'
@@ -42,7 +42,7 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
 	if (!isInitialized) {
 		return (
 			<div className="h-screen w-full grid place-content-center">
-				<img src={FlowLogo} className="animate-pulse" alt="flow" />
+				<FlowIcon />
 			</div>
 		)
 	}

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import flowLogo from '@/assets/flow.svg'
+import FlowLogo from '@/assets/icons/FlowLogo'
 import {
 	Sidebar,
 	SidebarContent,
@@ -18,9 +18,9 @@ import type { ISpace } from '@/types/tasks'
 import { CircleDot, Palette, Plus, Tag } from 'lucide-react'
 import NewSpaceInput from '../space/NewSpaceInput'
 import SpaceListItem from '../space/SpaceListItem'
+import TagsDialog from '../tags/TagsDialog'
 import AppearanceDialog from './AppearanceDialog'
 import StatusDialog from './StatusDialog'
-import TagsDialog from '../tags/TagsDialog'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { data: spaces } = useSpaces()
@@ -34,9 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarHeader className="p-6">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<a href="#">
-							<img src={flowLogo} alt="Flow" />
-						</a>
+						<FlowLogo />
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>

@@ -7,12 +7,12 @@ import DateField from './fields/DateField'
 import StatusField from './fields/StatusField'
 import PriorityField from './fields/PriorityField'
 import TagsField from './fields/TagsField'
-import { Loader } from 'lucide-react'
 import SubTasksList from './sub-task/SubTasksList'
 import { useUpdateTask } from '@/services/mutation'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAtomValue } from 'jotai/react'
 import { activeSpaceIdAtom } from '@/lib/atoms'
+import Loader from '@/components/widgets/Loader'
 
 export default function TaskDetailsDialog({
 	open,
@@ -30,7 +30,7 @@ export default function TaskDetailsDialog({
 		taskId: taskId,
 	})
 	const { data: statusList, isLoading: isStatusLoading } = useStatusList()
-	const { data: tagsList, isLoading: isTagsLoading } = useTagsList()
+	const { data: tagsList, isLoading: isTagsLoading } = useTagsList({})
 	const { mutate } = useUpdateTask()
 
 	function updateTask(key: string, value: any) {
@@ -62,7 +62,7 @@ export default function TaskDetailsDialog({
 				</DialogHeader>
 
 				{isLoading || isStatusLoading || isTagsLoading ? (
-					<Loader />
+					<Loader className="min-h-[200px] " />
 				) : (
 					<div className="">
 						<div className="mb-3">

@@ -1,7 +1,17 @@
 import { TaskPriority } from '@/types/tasks'
 import { atomWithStorage } from 'jotai/utils'
 
+export enum Theme {
+	light = 'light',
+	dark = 'dark',
+	system = 'system',
+}
+
+export const defaultPrimaryColor = '#2563EB'
+
 export const activeSpaceIdAtom = atomWithStorage<number | null>('space', null)
+export const themeAtom = atomWithStorage<Theme>('theme', Theme.light)
+export const primaryColorAtom = atomWithStorage('color', defaultPrimaryColor)
 
 export const PriorityOptions = [
 	{
@@ -68,4 +78,12 @@ export const StatusColors = [
 	'#B388FF', // Pastel Violet
 	'#80CBC4', // Pastel Teal
 	'#C5E1A5', // Pastel Lime
+]
+
+export const themeColors = [
+	'#2563EB', // Royal Blue
+	'#10B981', // Emerald Green
+	'#6D28D9', // Deep Purple
+	'#754E1A', // Mustard
+	'#CB0404', // Vibrant Rose
 ]
