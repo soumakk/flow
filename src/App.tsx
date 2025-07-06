@@ -22,8 +22,8 @@ export default function App() {
 					{activeSpaceId ? (
 						<>
 							<AppHeader />
-							<TaskFilters />
-							<div className="flex-1 relative max-w-5xl px-4 mx-auto flex flex-col overflow-hidden">
+							<div className="flex-1 relative max-w-6xl px-4 mx-auto flex flex-col overflow-hidden">
+								<TaskFilters />
 								<TableView />
 							</div>
 						</>

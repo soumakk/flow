@@ -20,9 +20,9 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
 	const offset = circumference - (progress / 100) * circumference
 
 	return (
-		<svg width={size} height={size}>
+		<svg width={size} height={size} viewBox={`0 0 ${size + 1} ${size + 1}`}>
 			<circle
-				stroke={bgColor}
+				stroke="var(--border)"
 				fill="none"
 				strokeWidth={strokeWidth}
 				cx={size / 2}
@@ -30,7 +30,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
 				r={radius}
 			/>
 			<circle
-				stroke={color}
+				stroke="var(--primary)"
 				fill="none"
 				strokeWidth={strokeWidth}
 				cx={size / 2}

@@ -11,6 +11,7 @@ import { Calendar1, CircleDot, Flag, Hourglass, Tag, Type } from 'lucide-react'
 import { useState } from 'react'
 import DataTable from './DataTable'
 import TaskDetailsDialog from '../task-details/TaskDetailsDialog'
+import CircularProgress from '@/components/widgets/CircularProgress'
 
 export default function TableView() {
 	const { data: tasks, isLoading: isTasksLoading, refetch } = useTasks()
@@ -25,9 +26,18 @@ export default function TableView() {
 					<span>Title</span>
 				</p>
 			),
-			cell: ({ getValue }) => {
+			cell: ({ getValue, row }) => {
 				const value = getValue() as string
-				return <p className="whitespace-nowrap">{value}</p>
+				const totalCount = row.original?.subtask_count ?? 0
+				const completedCount = row.original?.completed_subtasks ?? 0
+				const progress = (completedCount * 100) / totalCount
+
+				return (
+					<div className="flex items-center gap-2">
+						<p className="whitespace-nowrap">{value}</p>
+						<CircularProgress progress={progress} size={18} strokeWidth={2} />
+					</div>
+				)
 			},
 			size: 300,
 		},

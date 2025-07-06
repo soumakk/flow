@@ -1,5 +1,5 @@
 import FlowIcon from '@/assets/icons/FlowIcon'
-import { initDBQuery } from '@/lib/sql'
+import { initDBQuery, initDummyDataQuery, resetDBQuery } from '@/lib/sql'
 import { PGlite } from '@electric-sql/pglite'
 import { PGliteProvider } from '@electric-sql/pglite-react'
 import { live, type PGliteWithLive } from '@electric-sql/pglite/live'
@@ -18,16 +18,9 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
 					relaxedDurability: false,
 				})
 
-				// await pgliteDb.exec(`
-				// 	DROP TABLE IF EXISTS task_tag CASCADE;
-				// 	DROP TABLE IF EXISTS sub_task CASCADE;
-				// 	DROP TABLE IF EXISTS task CASCADE;
-				// 	DROP TABLE IF EXISTS tag CASCADE;
-				// 	DROP TABLE IF EXISTS status CASCADE;
-				// 	DROP TABLE IF EXISTS space CASCADE;
-				// 	`)
+				await pgliteDb.exec(resetDBQuery)
 				await pgliteDb.exec(initDBQuery)
-				// await pgliteDb.exec(initDummyDataQuery)
+				await pgliteDb.exec(initDummyDataQuery)
 
 				setDb(pgliteDb)
 				setIsInitialized(true)

@@ -36,7 +36,7 @@ export default function TaskFilters() {
 	}))
 
 	return (
-		<div className="flex px-6 pb-4">
+		<div className="flex pb-4">
 			<div className="flex items-center gap-3 py-1">
 				<Input
 					placeholder="Search tasks"
