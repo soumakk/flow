@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
 import Loader from '@/components/widgets/Loader'
 import StatusBadge from '@/components/widgets/StatusBadge'
-import { useUpdateTask } from '@/services/mutation'
+import { useDeleteTask, useUpdateTask } from '@/services/mutation'
 import { useStatusList, useTagsList, useTaskDetails } from '@/services/query'
 import { DialogTitle } from '@radix-ui/react-dialog'
 import DateField from './fields/DateField'
@@ -11,6 +11,7 @@ import TagsField from './fields/TagsField'
 import TextField from './fields/TextField'
 import TextareaField from './fields/TextareaField'
 import SubTasksList from './sub-task/SubTasksList'
+import { Button } from '@/components/ui/button'
 
 export default function TaskDetailsDialog({
 	open,
@@ -32,10 +33,11 @@ export default function TaskDetailsDialog({
 	})
 	const { data: statusList, isLoading: isStatusLoading } = useStatusList()
 	const { data: tagsList, isLoading: isTagsLoading } = useTagsList({})
-	const { mutate } = useUpdateTask()
+	const { mutate: updateTask } = useUpdateTask()
+	const { mutate: deleteTask } = useDeleteTask()
 
-	function updateTask(key: string, value: any) {
-		mutate(
+	function handleUpdateTask(key: string, value: any) {
+		updateTask(
 			{
 				taskId,
 				title: taskData?.title,
@@ -50,6 +52,20 @@ export default function TaskDetailsDialog({
 				onSuccess: () => {
 					refetch()
 					refetchTasks?.()
+				},
+			}
+		)
+	}
+
+	function handleDeleteTask() {
+		deleteTask(
+			{
+				taskId,
+			},
+			{
+				onSuccess: () => {
+					refetchTasks?.()
+					onClose()
 				},
 			}
 		)
@@ -72,7 +88,7 @@ export default function TaskDetailsDialog({
 								placeholder="Untitled"
 								defaultValue={taskData?.title}
 								onSave={(value) => {
-									updateTask('title', value)
+									handleUpdateTask('title', value)
 								}}
 							/>
 						</div>
@@ -86,7 +102,7 @@ export default function TaskDetailsDialog({
 								<DateField
 									initialValue={taskData?.due_date}
 									onSave={(value) => {
-										updateTask('due_date', value)
+										handleUpdateTask('due_date', value)
 									}}
 								/>
 							</div>
@@ -97,7 +113,7 @@ export default function TaskDetailsDialog({
 								</label>
 								<StatusField
 									onSave={(value) => {
-										updateTask('status_id', value)
+										handleUpdateTask('status_id', value)
 									}}
 									initialValue={taskData?.status_id}
 									statusList={statusList}
@@ -113,7 +129,7 @@ export default function TaskDetailsDialog({
 								</label>
 								<PriorityField
 									onSave={(value) => {
-										updateTask('priority', value)
+										handleUpdateTask('priority', value)
 									}}
 									initialValue={taskData.priority}
 								/>
@@ -125,7 +141,7 @@ export default function TaskDetailsDialog({
 								</label>
 								<TagsField
 									onSave={(value) => {
-										updateTask('tag_ids', value)
+										handleUpdateTask('tag_ids', value)
 									}}
 									initialTags={taskData?.tags?.map((tag) => tag.id)}
 									tagsList={tagsList}
@@ -138,13 +154,21 @@ export default function TaskDetailsDialog({
 								<TextareaField
 									initialValue={taskData.description}
 									onSave={(value) => {
-										updateTask('description', value)
+										handleUpdateTask('description', value)
 									}}
 								/>
 							</div>
 						</div>
 
 						<SubTasksList task={taskData} />
+
+						<Button
+							variant="secondary"
+							className="bg-transparent text-destructive hover:bg-destructive/10"
+							onClick={handleDeleteTask}
+						>
+							Delete
+						</Button>
 					</div>
 				)}
 			</DialogContent>

@@ -8,41 +8,6 @@ export enum Theme {
 	system = 'system',
 }
 
-export const defaultPrimaryColor = '#2563EB'
-
-export const activeSpaceIdAtom = atomWithStorage<number | null>('space', null)
-export const themeAtom = atomWithStorage<Theme>('theme', Theme.light)
-export const primaryColorAtom = atomWithStorage('color', defaultPrimaryColor)
-
-export const searchQueryAtom = atom('')
-export const statusFilterAtom = atom<number[]>([])
-export const tagsFilterAtom = atom<number[]>([])
-export const priorityFilterAtom = atom<string[]>([])
-export const dueDateFilterAtom = atom<string>()
-
-export const PriorityOptions = [
-	{
-		label: 'Urgent',
-		value: TaskPriority.Urgent,
-		color: '#fb2c36',
-	},
-	{
-		label: 'High',
-		value: TaskPriority.High,
-		color: '#eab308',
-	},
-	{
-		label: 'Normal',
-		value: TaskPriority.Normal,
-		color: '#3b82f6',
-	},
-	{
-		label: 'Low',
-		value: TaskPriority.Low,
-		color: '#6a7282 ',
-	},
-]
-
 export const StatusColors = [
 	'#E53935', // Red
 	'#FF7043', // Orange Red
@@ -92,9 +57,47 @@ export const StatusColors = [
 ]
 
 export const themeColors = [
-	'#2563EB', // Royal Blue
-	'#10B981', // Emerald Green
-	'#6D28D9', // Deep Purple
-	'#754E1A', // Mustard
-	'#CB0404', // Vibrant Rose
+	'#2563EB', // Blue (Strong, accessible)
+	'#F59E42', // Orange (Warm, energetic)
+	'#10B981', // Emerald Green (Fresh, modern)
+	'#E11D48', // Rose Red (Bold, attention-grabbing)
+	'#A21CAF', // Purple (Rich, creative)
+	'#FACC15', // Gold/Yellow (Bright, lively)
+	'#0EA5E9', // Sky Blue (Cool, clean)
+	'#F472B6', // Pink (Soft yet vibrant)
+]
+
+export const defaultPrimaryColor = themeColors[0]
+
+export const activeSpaceIdAtom = atomWithStorage<number | null>('space', null)
+export const themeAtom = atomWithStorage<Theme>('theme', Theme.light)
+export const primaryColorAtom = atomWithStorage('color', defaultPrimaryColor)
+
+export const searchQueryAtom = atom('')
+export const statusFilterAtom = atom<number[]>([])
+export const tagsFilterAtom = atom<number[]>([])
+export const priorityFilterAtom = atom<string[]>([])
+export const dueDateFilterAtom = atom<string>()
+
+export const PriorityOptions = [
+	{
+		label: 'Urgent',
+		value: TaskPriority.Urgent,
+		color: '#fb2c36',
+	},
+	{
+		label: 'High',
+		value: TaskPriority.High,
+		color: '#eab308',
+	},
+	{
+		label: 'Normal',
+		value: TaskPriority.Normal,
+		color: '#3b82f6',
+	},
+	{
+		label: 'Low',
+		value: TaskPriority.Low,
+		color: '#6a7282 ',
+	},
 ]

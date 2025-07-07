@@ -16,6 +16,7 @@ import {
 	deleteStatus,
 	deleteSubTask,
 	deleteTag,
+	deleteTask,
 	updateSpace,
 	updateStatus,
 	updateSubTask,
@@ -35,6 +36,13 @@ export function useUpdateTask() {
 	const db = usePGlite()
 	return useMutation({
 		mutationFn: (body: IUpdateTaskBody) => updateTaskDetails(db, body),
+	})
+}
+
+export function useDeleteTask() {
+	const db = usePGlite()
+	return useMutation({
+		mutationFn: (body: { taskId: number }) => deleteTask(db, body),
 	})
 }
 

@@ -192,6 +192,13 @@ export async function updateTaskDetails(db: PGliteWithLive, body: IUpdateTaskBod
 	})
 }
 
+export async function deleteTask(db: PGliteWithLive, body: { taskId: number }) {
+	return await db.sql`
+      DELETE FROM task 
+      WHERE id = ${body.taskId}
+    `
+}
+
 // Sub task
 export async function addSubTask(db: PGliteWithLive, body: IAddSubTaskBody) {
 	return await db.sql`

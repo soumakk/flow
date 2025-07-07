@@ -20,8 +20,8 @@ export function DatePicker({ value, onChange, ...rest }: IDatePicker) {
 		<Popover>
 			<PopoverTrigger asChild>
 				<Button
-					variant={'outline'}
-					className={cn('h-8 justify-start text-left font-normal px-3')}
+					variant={'ghost'}
+					className={cn('h-8 justify-start text-left font-normal px-3 border	')}
 				>
 					<Calendar1 className="h-4 w-4 text-muted-foreground" />
 					{value ? dayjs(value).format('MMM DD, YYYY') : <span>Due Date</span>}

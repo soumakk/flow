@@ -33,9 +33,9 @@ export default function AppearanceDialog({
 						<button
 							key={t.value}
 							className={cn(
-								'flex-1 text-sm border rounded-md p-4 flex items-center gap-2 cursor-pointer',
+								'flex-1 text-sm border-2 rounded-md p-4 flex items-center gap-2 cursor-pointer',
 								{
-									'border-2 border-primary text-primary': theme === t.value,
+									'border-primary text-primary': theme === t.value,
 								}
 							)}
 							onClick={() => setTheme(t.value)}
