@@ -139,13 +139,15 @@ export default function TaskDetailsDialog({
 								<label className="text-muted-foreground text-xs uppercase font-medium">
 									Tags
 								</label>
-								<TagsField
-									onSave={(value) => {
-										handleUpdateTask('tag_ids', value)
-									}}
-									initialTags={taskData?.tags?.map((tag) => tag.id)}
-									tagsList={tagsList}
-								/>
+								<div className="col-span-2">
+									<TagsField
+										onSave={(value) => {
+											handleUpdateTask('tag_ids', value)
+										}}
+										initialTags={taskData?.tags?.map((tag) => tag.id)}
+										tagsList={tagsList}
+									/>
+								</div>
 							</div>
 						</div>
 

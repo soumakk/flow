@@ -38,7 +38,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
-			<SidebarContent className="px-6">
+			<SidebarContent className="px-6 py-1">
 				<SidebarGroup className="p-0">
 					<SidebarGroupContent>
 						<SidebarMenu>
@@ -69,10 +69,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					<SidebarGroupLabel className="justify-between">
 						<span>Spaces</span>
 
-						<Plus
-							className="h-4 w-4 cursor-pointer"
+						<button
+							className="h-6 w-6 flex items-center justify-center"
 							onClick={() => setIsAddNewSpace(true)}
-						/>
+						>
+							<Plus className="h-4 w-4 cursor-pointer" />
+						</button>
 					</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>

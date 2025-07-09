@@ -8,29 +8,82 @@ import type {
 	ITaskDetails,
 	IUpdateSubTaskBody,
 	IUpdateTaskBody,
+	TaskFilterBody,
 } from '@/types/tasks'
 import type { PGliteWithLive } from '@electric-sql/pglite/live'
 
 // Tasks
 export async function getAllTasksSQL(
 	db: PGliteWithLive,
-	body: { spaceId: number; statusIds?: number[]; priorities?: string[] }
-) {
+	body: TaskFilterBody
+): Promise<{ totalCount: number; tasks: ITask[] } | null> {
 	try {
-		let query = 'WHERE t.space_id = $1 '
+		const queryParts: string[] = ['t.space_id = $1']
 		const params: any[] = [body.spaceId]
+		let paramIndex = 2
 
-		if (body?.statusIds?.length) {
-			query += `AND status_id IN (${body.statusIds?.join(', ')})`
+		// Status filter
+		if (body.statusIds?.length) {
+			queryParts.push(
+				`t.status_id IN (${body.statusIds.map(() => `$${paramIndex++}`).join(', ')})`
+			)
+			params.push(...body.statusIds)
 		}
 
-		// if (body?.priorities?.length) {
-		// 	query += `OR priority IN (${body.priorities?.join(', ')})`
-		// }
-		// console.log(body, query)
+		// Priority filter
+		if (body.priorities?.length) {
+			queryParts.push(
+				`t.priority IN (${body.priorities.map(() => `$${paramIndex++}`).join(', ')})`
+			)
+			params.push(...body.priorities)
+		}
 
+		// Tag filter (tasks with any of the selected tags)
+		if (body.tagIds?.length) {
+			queryParts.push(`t.id IN (
+        SELECT task_id FROM task_tag WHERE tag_id IN (${body.tagIds
+			.map(() => `$${paramIndex++}`)
+			.join(', ')})
+      )`)
+			params.push(...body.tagIds)
+		}
+
+		// Due date range
+		if (body.dueDateFrom) {
+			queryParts.push(`t.due_date >= $${paramIndex++}`)
+			params.push(body.dueDateFrom)
+		}
+		if (body.dueDateTo) {
+			queryParts.push(`t.due_date <= $${paramIndex++}`)
+			params.push(body.dueDateTo)
+		}
+
+		// Case-insensitive title search
+		if (body.search) {
+			queryParts.push(`t.title ILIKE $${paramIndex++}`)
+			params.push(`%${body.search}%`)
+		}
+
+		// Pagination
+		const limit = body.limit ?? 10
+		const offset = body.offset ?? 0
+		params.push(limit, offset)
+
+		const whereClause = queryParts.length ? `WHERE ${queryParts.join(' AND ')}` : ''
+
+		// --- Count Query (without limit/offset) ---
+		const countParams = params.slice(0, params.length - 2)
+		const countQuery = `
+      SELECT COUNT(DISTINCT t.id) AS total_count
+      FROM task t
+      ${whereClause}
+    `
+		const countResult = await db.query(countQuery, countParams)
+		const totalCount = Number((countResult.rows[0] as any)?.total_count ?? 0)
+
+		// --- Main Data Query ---
 		const data = await db.query(
-			` 
+			`
       SELECT 
         t.id,
         t.title,
@@ -41,13 +94,11 @@ export async function getAllTasksSQL(
         t.updated_at,
         s.id as space_id,
         st.id as status_id,
-    
         JSONB_BUILD_OBJECT(
           'id', st.id, 
           'name', st.name, 
           'color', st.color
-        )  as status,
-    
+        ) as status,
         COALESCE(
           JSONB_AGG(
             DISTINCT CASE 
@@ -62,25 +113,26 @@ export async function getAllTasksSQL(
           ) FILTER (WHERE tag.id IS NOT NULL), 
           '[]'::jsonb
         ) as tags,
-    
         COUNT(DISTINCT sub.id) as subtask_count,
         COUNT(DISTINCT CASE WHEN sub.completed = true THEN sub.id END) as completed_subtasks
-    
-        FROM task t
-        JOIN space s ON t.space_id = s.id
-        JOIN status st ON t.status_id = st.id
-        LEFT JOIN task_tag tt ON t.id = tt.task_id
-        LEFT JOIN tag ON tt.tag_id = tag.id
-        LEFT JOIN sub_task sub ON t.id = sub.task_id
-    
-        ${query}
-
-        GROUP BY t.id, s.id, s.name, st.id, st.name, st.color
-        ORDER BY t.created_at DESC
+      FROM task t
+      JOIN space s ON t.space_id = s.id
+      JOIN status st ON t.status_id = st.id
+      LEFT JOIN task_tag tt ON t.id = tt.task_id
+      LEFT JOIN tag ON tt.tag_id = tag.id
+      LEFT JOIN sub_task sub ON t.id = sub.task_id
+      ${whereClause}
+      GROUP BY t.id, s.id, s.name, st.id, st.name, st.color
+      ORDER BY t.created_at DESC
+      LIMIT $${params.length - 1} OFFSET $${params.length}
       `,
 			params
 		)
-		return data.rows as ITask[]
+
+		return {
+			totalCount,
+			tasks: data.rows as ITask[],
+		}
 	} catch (error) {
 		console.log(error)
 		return null

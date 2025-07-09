@@ -37,7 +37,7 @@ export function DatePicker({ value, onChange, ...rest }: IDatePicker) {
 				/>
 				<div className="px-3 pb-3">
 					<Button
-						variant="secondary"
+						variant="ghost"
 						size="sm"
 						className="w-full "
 						onClick={() => onChange(null)}

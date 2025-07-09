@@ -1,7 +1,6 @@
-import Loader from '@/components/widgets/Loader'
+import CircularProgress from '@/components/widgets/CircularProgress'
 import PriorityFlag from '@/components/widgets/PriorityFlag'
 import StatusBadge from '@/components/widgets/StatusBadge'
-import TagBadge from '@/components/widgets/TagBadge'
 import { PriorityOptions } from '@/lib/atoms'
 import { formatDate } from '@/lib/utils'
 import { useTasks } from '@/services/query'
@@ -9,12 +8,14 @@ import type { ITask, TaskPriority } from '@/types/tasks'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Calendar1, CircleDot, Flag, Hourglass, Tag, Type } from 'lucide-react'
 import { useState } from 'react'
-import DataTable from './DataTable'
 import TaskDetailsDialog from '../task-details/TaskDetailsDialog'
-import CircularProgress from '@/components/widgets/CircularProgress'
+import DataTable from './DataTable'
+import TagsCell from './TagsCell'
+import TaskFilters from '../filters/TaskFilters'
+import TableFooter from './TableFooter'
 
 export default function TableView() {
-	const { data: tasks, isLoading: isTasksLoading, refetch } = useTasks()
+	const { data, isLoading: isTasksLoading, refetch } = useTasks()
 	const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
 
 	const columns: ColumnDef<ITask>[] = [
@@ -39,7 +40,7 @@ export default function TableView() {
 					</div>
 				)
 			},
-			size: 300,
+			size: 400,
 		},
 		{
 			accessorKey: 'priority',
@@ -96,16 +97,9 @@ export default function TableView() {
 			),
 			cell: ({ getValue, row }) => {
 				const tags = row.original?.tags
-				return (
-					<div className="flex items-center gap-2">
-						{tags?.map((tag) => (
-							<TagBadge tag={tag} />
-						))}
-					</div>
-				)
+				return <TagsCell tags={tags} />
 			},
 		},
-
 		{
 			accessorKey: 'updated_at',
 			header: () => (
@@ -126,17 +120,20 @@ export default function TableView() {
 		},
 	]
 
-	if (isTasksLoading) {
-		return <Loader />
-	}
-
 	return (
 		<>
-			<DataTable
-				columns={columns}
-				data={tasks ?? []}
-				onRowClick={(task) => setSelectedTaskId(task.original.id)}
-			/>
+			<div className="flex-1 relative max-w-6xl px-4 mx-auto flex flex-col">
+				<TaskFilters />
+				<div className="flex-1">
+					<DataTable
+						columns={columns}
+						data={data?.tasks ?? []}
+						onRowClick={(task) => setSelectedTaskId(task.original.id)}
+						isLoading={isTasksLoading}
+					/>
+				</div>
+				<TableFooter totalCount={data?.totalCount} />
+			</div>
 
 			{selectedTaskId ? (
 				<TaskDetailsDialog

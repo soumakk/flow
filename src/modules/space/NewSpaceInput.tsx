@@ -31,8 +31,11 @@ export default function NewSpaceInput({ onClose }: { onClose: () => void }) {
 				onClose()
 			}}
 			onKeyDown={(e) => {
+				console.log(e.key)
 				if (e.key === 'Enter') {
 					handleSave()
+				} else if (e.key === 'Escape') {
+					onClose()
 				}
 			}}
 		/>

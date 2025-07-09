@@ -78,6 +78,7 @@ export const statusFilterAtom = atom<number[]>([])
 export const tagsFilterAtom = atom<number[]>([])
 export const priorityFilterAtom = atom<string[]>([])
 export const dueDateFilterAtom = atom<string>()
+export const currentPageAtom = atom<number>(1)
 
 export const PriorityOptions = [
 	{

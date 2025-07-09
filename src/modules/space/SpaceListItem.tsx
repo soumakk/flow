@@ -64,9 +64,8 @@ export default function SpaceListItem({ space }: { space: ISpace }) {
 	return (
 		<SidebarMenuItem>
 			<ContextMenu>
-				<ContextMenuTrigger>
+				<ContextMenuTrigger asChild>
 					<SidebarMenuButton
-						asChild
 						isActive={activeSpaceId === space.id}
 						onClick={() => setActiveSpaceId(space.id)}
 					>

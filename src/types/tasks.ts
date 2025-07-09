@@ -97,3 +97,15 @@ export interface IUpdateSubTaskBody {
 	title: string
 	completed: boolean
 }
+
+export interface TaskFilterBody {
+	spaceId: number
+	statusIds?: number[]
+	priorities?: string[]
+	tagIds?: number[]
+	dueDateFrom?: string // ISO date string
+	dueDateTo?: string // ISO date string
+	limit?: number
+	offset?: number
+	search?: string
+}

@@ -96,7 +96,7 @@ export function MultiDropdown(props: {
 				{selected?.length ? (
 					<div className="p-1">
 						<Button
-							variant="secondary"
+							variant="ghost"
 							size="sm"
 							className="w-full "
 							onClick={() => {
