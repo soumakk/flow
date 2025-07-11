@@ -13,6 +13,7 @@ import {
 import { useAtomValue } from 'jotai/react'
 import type { TaskFilterBody } from '@/types/tasks'
 import dayjs from 'dayjs'
+import { useDebounce } from '@uidotdev/usehooks'
 
 export function useSpaces() {
 	const db = usePGlite()
@@ -30,6 +31,7 @@ export function useTaskFilters() {
 	const priorityFilter = useAtomValue(priorityFilterAtom)
 	const dueDateFilter = useAtomValue(dueDateFilterAtom)
 	const currentPage = useAtomValue(currentPageAtom)
+	const debouncedSearch = useDebounce(searchQuery, 300)
 	const pageLimit = 20
 
 	const body: TaskFilterBody = {
@@ -37,7 +39,7 @@ export function useTaskFilters() {
 		statusIds: statusFilter,
 		priorities: priorityFilter,
 		tagIds: tagsFilter,
-		search: searchQuery,
+		search: debouncedSearch,
 		offset: (currentPage - 1) * pageLimit,
 		limit: pageLimit,
 		dueDateFrom: dueDateFilter?.from

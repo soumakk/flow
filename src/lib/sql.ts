@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS task (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL CHECK (char_length(title) > 0),
   description TEXT,
-  due_date TIMESTAMP,
+  due_date TEXT,
   space_id INT NOT NULL REFERENCES space(id) ON DELETE CASCADE,
   status_id INT NOT NULL REFERENCES status(id) DEFAULT 1,
   priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('urgent', 'high', 'normal', 'low')),
@@ -63,7 +63,8 @@ ON CONFLICT (name) DO NOTHING;
 
 -- Insert work-related space
 INSERT INTO space (name) VALUES
-  ('Work & Development')
+  ('Work & Development'),
+  ('Personal Tasks')
 ON CONFLICT DO NOTHING;
 
 -- Insert sample tags

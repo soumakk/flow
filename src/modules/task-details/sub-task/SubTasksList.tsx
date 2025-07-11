@@ -23,8 +23,6 @@ export default function SubTasksList({ task }: { task: ITaskDetails }) {
 			},
 			{
 				onSuccess: () => {
-					console.log(key, value)
-
 					queryClient.invalidateQueries({ queryKey: ['task', task.id] })
 					queryClient.invalidateQueries({ queryKey: ['tasks', task.space_id] })
 				},

@@ -36,7 +36,9 @@ export default function TableView() {
 				return (
 					<div className="flex items-center gap-2">
 						<p className="whitespace-nowrap">{value}</p>
-						<CircularProgress progress={progress} size={18} strokeWidth={2} />
+						{/* {totalCount > 0 ? (
+							<CircularProgress progress={progress} size={18} strokeWidth={2} />
+						) : null} */}
 					</div>
 				)
 			},
@@ -100,24 +102,24 @@ export default function TableView() {
 				return <TagsCell tags={tags} />
 			},
 		},
-		{
-			accessorKey: 'updated_at',
-			header: () => (
-				<p className="flex gap-2 items-center whitespace-nowrap">
-					<Hourglass className="h-4 w-4 text-muted-foreground" />
-					<span>Last updated</span>
-				</p>
-			),
-			cell: ({ getValue }) => {
-				const updated = getValue() as string
-				if (!updated) return null
-				return (
-					<p className="whitespace-nowrap">
-						{formatDate(updated, 'MMM DD, YYYY HH:mm a')}
-					</p>
-				)
-			},
-		},
+		// {
+		// 	accessorKey: 'updated_at',
+		// 	header: () => (
+		// 		<p className="flex gap-2 items-center whitespace-nowrap">
+		// 			<Hourglass className="h-4 w-4 text-muted-foreground" />
+		// 			<span>Last updated</span>
+		// 		</p>
+		// 	),
+		// 	cell: ({ getValue }) => {
+		// 		const updated = getValue() as string
+		// 		if (!updated) return null
+		// 		return (
+		// 			<p className="whitespace-nowrap">
+		// 				{formatDate(updated, 'MMM DD, YYYY HH:mm a')}
+		// 			</p>
+		// 		)
+		// 	},
+		// },
 	]
 
 	return (
