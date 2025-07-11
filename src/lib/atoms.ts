@@ -58,14 +58,15 @@ export const StatusColors = [
 ]
 
 export const themeColors = [
-	'#2563EB', // Blue (Strong, accessible)
-	'#F59E42', // Orange (Warm, energetic)
-	'#10B981', // Emerald Green (Fresh, modern)
-	'#E11D48', // Rose Red (Bold, attention-grabbing)
-	'#A21CAF', // Purple (Rich, creative)
-	'#FACC15', // Gold/Yellow (Bright, lively)
-	'#0EA5E9', // Sky Blue (Cool, clean)
-	'#F472B6', // Pink (Soft yet vibrant)
+	'#3A86FF', // Bright Blue
+	'#E63946', // Vibrant Red
+	'#2A9D8F', // Vibrant Teal
+	'#264653', // Deep Blue-Green
+	'#8338EC', // Vibrant Purple
+	'#FFBE0B', // Bright Yellow
+	'#F4A261', // Vibrant Orange
+	'#F72585', // Bright Pink
+	'#06D6A0', // Bright Green
 ]
 
 export const defaultPrimaryColor = themeColors[0]

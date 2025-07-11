@@ -21,13 +21,24 @@ import SpaceListItem from '../space/SpaceListItem'
 import TagsDialog from '../tags/TagsDialog'
 import AppearanceDialog from './AppearanceDialog'
 import StatusDialog from '../status/StatusDialog'
+import { activeSpaceIdAtom } from '@/lib/atoms'
+import { useAtom, useSetAtom } from 'jotai/react'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { data: spaces } = useSpaces()
+	const [activeSpaceId, setActiveSpaceId] = useAtom(activeSpaceIdAtom)
+
 	const [isTagsDialogOpen, setIsTagsDialogOpen] = React.useState(false)
 	const [isStatusDialogOpen, setIsStatusDialogOpen] = React.useState(false)
 	const [isAppearanceDialogOpen, setIsAppearanceDialogOpen] = React.useState(false)
 	const [isAddNewSpace, setIsAddNewSpace] = React.useState(false)
+
+	React.useEffect(() => {
+		if (!activeSpaceId && spaces?.length && spaces?.[0]?.id) {
+			setActiveSpaceId(spaces[0].id)
+			console.log('here')
+		}
+	}, [activeSpaceId, setActiveSpaceId, spaces])
 
 	return (
 		<Sidebar {...props}>

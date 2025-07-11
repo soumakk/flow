@@ -17,7 +17,7 @@ export default function TableFooter({ totalCount }: { totalCount: number }) {
 	return (
 		<div className="flex items-center justify-between py-3">
 			<p className="text-sm text-muted-foreground">
-				total: {totalCount} | page: {page}
+				total: {totalCount} | page: {page} | limit: {pageLimit}
 			</p>
 			<div>
 				<Pagination>
