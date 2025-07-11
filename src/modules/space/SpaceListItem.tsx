@@ -95,13 +95,13 @@ export default function SpaceListItem({ space }: { space: ISpace }) {
 					</SidebarMenuButton>
 				</ContextMenuTrigger>
 				<ContextMenuContent>
-					<ContextMenuItem
+					{/* <ContextMenuItem
 						onClick={() => {
 							setIsEditMode(true)
 						}}
 					>
 						Rename
-					</ContextMenuItem>
+					</ContextMenuItem> */}
 					<ContextMenuItem variant="destructive" onClick={handleDelete}>
 						Delete
 					</ContextMenuItem>
