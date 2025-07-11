@@ -1,6 +1,7 @@
 import { TaskPriority } from '@/types/tasks'
 import { atomWithStorage } from 'jotai/utils'
 import { atom } from 'jotai/vanilla'
+import type { DateRange } from 'react-day-picker'
 
 export enum Theme {
 	light = 'light',
@@ -77,7 +78,7 @@ export const searchQueryAtom = atom('')
 export const statusFilterAtom = atom<number[]>([])
 export const tagsFilterAtom = atom<number[]>([])
 export const priorityFilterAtom = atom<string[]>([])
-export const dueDateFilterAtom = atom<string>()
+export const dueDateFilterAtom = atom<DateRange | null>()
 export const currentPageAtom = atom<number>(1)
 
 export const PriorityOptions = [

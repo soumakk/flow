@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input'
-import { DatePicker } from '@/components/widgets/DatePicker'
+import { DatePicker } from '@/components/widgets/DateRangePicker'
 import { MultiDropdown } from '@/components/widgets/MultiDropdown'
 import {
 	dueDateFilterAtom,
@@ -86,7 +86,12 @@ export default function TaskFilters() {
 					hideSearch
 				/>
 
-				<DatePicker id="date" value={dueDateFilter} onChange={setDueDateFilter} />
+				<DatePicker
+					id="date"
+					value={dueDateFilter}
+					onChange={setDueDateFilter}
+					placeholder="Due date"
+				/>
 			</div>
 		</div>
 	)

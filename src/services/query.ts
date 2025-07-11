@@ -12,6 +12,7 @@ import {
 } from '@/lib/atoms'
 import { useAtomValue } from 'jotai/react'
 import type { TaskFilterBody } from '@/types/tasks'
+import dayjs from 'dayjs'
 
 export function useSpaces() {
 	const db = usePGlite()
@@ -39,6 +40,12 @@ export function useTaskFilters() {
 		search: searchQuery,
 		offset: (currentPage - 1) * pageLimit,
 		limit: pageLimit,
+		dueDateFrom: dueDateFilter?.from
+			? dayjs(dueDateFilter.from).startOf('day').format('YYYY-MM-DD')
+			: null,
+		dueDateTo: dueDateFilter?.to
+			? dayjs(dueDateFilter.to).endOf('day').format('YYYY-MM-DD')
+			: null,
 	}
 
 	return {
@@ -50,7 +57,6 @@ export function useTaskFilters() {
 
 export function useTasks() {
 	const { reqBody } = useTaskFilters()
-	console.log(reqBody)
 
 	const db = usePGlite()
 

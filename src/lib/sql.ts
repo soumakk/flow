@@ -75,18 +75,18 @@ INSERT INTO tag (name, color) VALUES
   ('collaboration', '#facc15')
 ON CONFLICT (name) DO NOTHING;
 
--- Insert work-focused tasks
+-- Insert work-focused tasks with due_date in YYYY-MM-DD format
 INSERT INTO task (title, description, due_date, space_id, status_id, priority) VALUES
-  ('Implement Login Feature', 'Develop and test the login functionality.', '2025-07-14 16:58:52', 1, 1, 'high'),
-  ('Fix Critical Bug #123', 'Resolve the critical bug affecting user sessions.', '2025-07-12 16:58:52', 1, 3, 'urgent'),
-  ('Code Refactoring', 'Improve code quality and structure.', '2025-07-21 16:58:52', 1, 2, 'normal'),
-  ('Write Unit Tests', 'Create unit tests for new features.', '2025-07-17 16:58:52', 1, 1, 'high'),
-  ('Review Pull Requests', 'Review code submitted by team members.', '2025-07-10 16:58:52', 1, 2, 'normal'),
-  ('Fix UI Bugs', 'Resolve bugs in the user interface.', '2025-07-13 16:58:52', 1, 3, 'normal'),
-  ('Optimize Database Queries', 'Improve query performance.', '2025-07-19 16:58:52', 1, 4, 'high'),
-  ('Deploy to Production', 'Deploy the latest version to production.', '2025-07-15 16:58:52', 1, 1, 'high'),
-  ('Update API Documentation', 'Update docs for the latest API changes.', '2025-07-22 16:58:52', 1, 2, 'normal'),
-  ('Conduct Code Audit', 'Audit codebase for security and quality.', '2025-07-27 16:58:52', 1, 3, 'normal')
+  ('Implement Login Feature', 'Develop and test the login functionality.', '2025-07-14', 1, 1, 'high'),
+  ('Fix Critical Bug #123', 'Resolve the critical bug affecting user sessions.', '2025-07-12', 1, 3, 'urgent'),
+  ('Code Refactoring', 'Improve code quality and structure.', '2025-07-21', 1, 2, 'normal'),
+  ('Write Unit Tests', 'Create unit tests for new features.', '2025-07-17', 1, 1, 'high'),
+  ('Review Pull Requests', 'Review code submitted by team members.', '2025-07-10', 1, 2, 'normal'),
+  ('Fix UI Bugs', 'Resolve bugs in the user interface.', '2025-07-13', 1, 3, 'normal'),
+  ('Optimize Database Queries', 'Improve query performance.', '2025-07-19', 1, 4, 'high'),
+  ('Deploy to Production', 'Deploy the latest version to production.', '2025-07-15', 1, 1, 'high'),
+  ('Update API Documentation', 'Update docs for the latest API changes.', '2025-07-22', 1, 2, 'normal'),
+  ('Conduct Code Audit', 'Audit codebase for security and quality.', '2025-07-27', 1, 3, 'normal')
 ON CONFLICT DO NOTHING;
 
 -- Insert subtasks for each work-related task (some marked as completed)
